@@ -7,7 +7,7 @@ import joblib
 import redis
 from keras.models import load_model
 
-from phases.cea import CEAProcess
+from process.phases.process.cea import CEAProcess
 from phases.cpa import CPAProcess
 from phases.cta import CTAProcess
 from phases.data_preparation import compute_datatype, pre_processing

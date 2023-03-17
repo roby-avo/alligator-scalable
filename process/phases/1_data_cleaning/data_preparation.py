@@ -1,3 +1,34 @@
+import os
+import numpy as np
+import pandas as pd
+import math
+from lamAPI import LamAPI
+
+
+SAMPLE_SIZE = 25
+LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
+LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
+
+def format_table(table_df, header, kg_reference="wikidata"):
+    rows = []
+
+    for id_row, row in enumerate(table_df):
+        rows.append({"idRow":id_row+1, "data":row})
+    print("rows", rows)
+    print("SAMPLE_SIZE", SAMPLE_SIZE)
+    print(math.floor(len(rows)/SAMPLE_SIZE))
+    #buffer = []
+    #
+    rows = np.array_split(rows, max(math.floor(len(rows)/SAMPLE_SIZE), 1))
+
+        
+    object = {
+        "header": header,
+        "rows": rows,
+        "kgReference": kg_reference
+    }
+        
+    return object
 
 
 def compute_datatype(rows, lamapi_wrapper):
@@ -25,6 +56,7 @@ def compute_datatype(rows, lamapi_wrapper):
             
     return column_metadata, target        
 
+
 def pre_processing(header, rows, column_metadata, types, candidate_size):
     cells_buffer = {}
 
@@ -51,3 +83,33 @@ def pre_processing(header, rows, column_metadata, types, candidate_size):
         for type in cells_buffer[cell]:
             cells_set.append({"cell": cell, "type": type})
     return cells_set
+
+
+
+lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
+
+input = pd.read_csv("film.csv")
+data = format_table(input.values.tolist(), list(input.columns))
+header = data.get("header", [])
+rows = data["rows"]
+kg_reference = data["kgReference"]
+column_metadata = data["column"]
+target = data["target"]
+
+
+obj_row_update = {"status": "DONE", "time": None}
+
+if len(column_metadata) == 0:
+        column_metadata, target = compute_datatype(rows, lamAPI)
+        column_metadata[str(target["SUBJ"])] = "SUBJ"
+        obj_row_update["column"] = column_metadata
+        obj_row_update["metadata"] = {
+            "column": [{"idColumn": int(id_col), "tag": column_metadata[id_col]} for id_col in column_metadata]
+        }
+        obj_row_update["target"] = target
+
+
+
+print("WELL DONE!")
+print(column_metadata)
+
