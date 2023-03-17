@@ -32,8 +32,8 @@ class Process:
                         "descritpion": candidate["description"],
                         "types": candidate["types"],
                         "features": {feature:candidate.get(feature, 0) for feature in features},
-                        "matches": {},
-                        "pred": {}
+                        "matches": {str(id_col):[] for id_col in range(len(cells))},
+                        "pred": {str(id_col):{} for id_col in range(len(cells))}
                     })
             row_candidates.append(new_candidites)
         return row_candidates
