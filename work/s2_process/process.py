@@ -21,10 +21,9 @@ class Process:
                     "p_subj_ne", "p_subj_lit", "p_obj_ne", "desc", "descNgram", 
                     "cpa", "cpaMax", "cta", "ctaMax", "cea", "diff"]
         for i, cell in enumerate(cells):
-            candidates = []
+            new_candidites = []
             if i in self._target["NE"]:
                 candidates = self._get_candidates(cell, id_row)
-                new_candidites = []
                 for candidate in candidates:
                     new_candidites.append({
                         "id": candidate["id"],
@@ -33,7 +32,7 @@ class Process:
                         "types": candidate["types"],
                         "features": {feature:candidate.get(feature, 0) for feature in features},
                         "matches": {str(id_col):[] for id_col in range(len(cells))},
-                        "pred": {str(id_col):{} for id_col in range(len(cells))}
+                        "predicates": {str(id_col):{} for id_col in range(len(cells))}
                     })
             row_candidates.append(new_candidites)
         return row_candidates
@@ -50,5 +49,6 @@ class Process:
             candidates = result[cell]    
         except Exception as e:
             print(str(e))
+            return []
             
         return candidates
