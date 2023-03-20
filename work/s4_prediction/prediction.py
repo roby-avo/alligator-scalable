@@ -34,12 +34,13 @@ class Prediction:
 
 
 filename_path = sys.argv[1]
+feature_name = sys.argv[2]
 
 with open(filename_path) as f:
     input = json.loads(f.read())
 
 model = load_model("neural_network.h5")
-Prediction(input, model).compute_prediction("cea")
+Prediction(input, model).compute_prediction(feature_name)
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(input, indent=4))
