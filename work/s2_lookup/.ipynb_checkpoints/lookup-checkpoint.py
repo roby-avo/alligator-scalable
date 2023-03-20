@@ -1,6 +1,6 @@
 import traceback
 
-class Process:
+class Lookup:
     def __init__(self, data:object, lamAPI):
         self._header = data.get("header", [])
         self._table_name = data["name"]

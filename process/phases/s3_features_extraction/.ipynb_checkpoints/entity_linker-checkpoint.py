@@ -2,10 +2,9 @@ import utils.metrics as metrics
 
 
 class EntityLinker:
-    def __init__(self, row, lamAPI, rankers: list):
-        self._row = row
+    def __init__(self, data, lamAPI):
+        self._data = data
         self._lamAPI = lamAPI
-        self._rankers = rankers
         
         
     def compute_relationship_score(self):
@@ -56,55 +55,7 @@ class EntityLinker:
             if temp is not None:
                 temp["features"]["p_obj_ne"] += object_rel_score_buffer[candidate]
             
-        
-    def compute_final_score(self):      
-
-        def check(candidate, max_score, threshold=0.03):
-            return (max_score - candidate["score"] < threshold)
-        
-        winning_candidates = []
-        winning_entities = {}
-        candidates_rankend = []
-        candidates_discarded = []
-        #weights = {"ed": 10, "jaccard": 8, "jaccardNgram": 5, "p_subj_ne": 3, "p_subj_lit": 7, "p_obj_ne": 4, "desc":2, "descNgram": 3} 
-        cells = self._row.get_cells()
-        for id_col, cell in enumerate(cells):
-            wc = []
-            rank = []
-            discarded = []
-            if not cell.is_lit_cell:
-                candidates = cell.candidates_entities()
-                max_score = 0
-                features = []
-                for candidate in candidates:
-                    features_values = {feature: round(candidates[candidate]["features"][feature], 3) for feature in candidates[candidate]["features"]}
-                    features.append(list(features_values.values()))
-            
-                if len(features) > 0:
-                    for iteration, ranker in enumerate(self._rankers):
-                        predictions = ranker.predict(features)
-                        for i, candidate in enumerate(candidates):
-                            score = round(float(predictions[i][1]), 3)
-                            candidates[candidate][f"{ranker._name}_score"] = score
-                            if iteration == 1:
-                                candidates[candidate]["score"] = score
-                                if score > max_score:
-                                    max_score = score      
-
-                rank = sorted(candidates.items(), key=lambda x: x[1]["score"], reverse=True)[0:20]
-                wc = [candidate[1] for candidate in rank if check(candidate[1], max_score)]
-                discarded = list(cell._candidates_discarded.items())[0:10]
-                
-                
-            winning_candidates.append(wc)
-            candidates_rankend.append(rank)
-            candidates_discarded.append(discarded)
-            if len(wc) == 1:
-                wc[0]["match"] = True
-                winning_entities[str(id_col)] = wc[0]["id"]     
-        return (winning_candidates, winning_entities, candidates_rankend, candidates_discarded)
-        
-
+    
     def _match_lit_cells(self, subj_cell, obj_cell):
     
         def get_score_based_on_datatype(valueInCell, valueFromKG, datatype):
