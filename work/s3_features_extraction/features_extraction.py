@@ -134,7 +134,6 @@ class FeaturesExtraction:
 
 
 
-SAMPLE_SIZE = 25
 LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
 LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
 lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
@@ -145,3 +144,7 @@ with open(filename_path) as f:
     
 
 FeaturesExtraction(input, lamAPI).compute_features()
+
+
+with open("/tmp/output.json", "w") as f:
+    f.write(json.dumps(input, indent=4))

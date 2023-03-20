@@ -1,1 +1,3 @@
 requests
+nltk
+python-dateutil
