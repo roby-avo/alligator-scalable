@@ -43,6 +43,7 @@ class Lookup:
 
 
     def _get_candidates(self, cell, id_row):
+        print("Try lookup for cell:", cell)
         candidates = []
         types = None
         result = None
