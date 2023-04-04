@@ -10,8 +10,8 @@ class FeaturesExtractionRevision:
         
         
     def compute_features(self):
-        features = [[] for id_col in range(len(self._data["metadata"]["column"]))]
-        for id_row, row in enumerate(self._data["candidates"]):
+        features = [[] for _ in range(len(self._data["metadata"]["column"]))]
+        for row in self._data["candidates"]:
             for id_col, candidates in enumerate(row):
                 id_col = str(id_col)
                 for candidate in candidates:
@@ -23,22 +23,27 @@ class FeaturesExtractionRevision:
                                 ctaMax = self._cta[id_col][t["id"]]
                     
                     (cpa, cpaMax) = (0, 0)
-                    total_predicates = 0
+                    predicates = {}
                     for id_col_pred in candidate["predicates"]:
                         for id_predicate in candidate["predicates"][id_col_pred]:
-                            if id_predicate in self._cpa[id_col]:
-                                total_predicates += 1
-                                cpa += self._cpa[id_col][id_predicate]
-                                if self._cpa[id_col][id_predicate] > cpaMax:
-                                    cpaMax = self._cpa[id_col][id_predicate]
-                                
+                            if id_predicate not in predicates:
+                                predicates[id_predicate] = 0
+                            if candidate["predicates"][id_col_pred][id_predicate] > predicates[id_predicate]:
+                                predicates[id_predicate] = candidate["predicates"][id_col_pred][id_predicate]
+
+                    for id_predicate in predicates:
+                        if id_predicate in self._cpa[id_col]:
+                            cpa += self._cpa[id_col][id_predicate] * predicates[id_predicate]
+                            if self._cpa[id_col][id_predicate] * predicates[id_predicate] > cpaMax:
+                                cpaMax = self._cpa[id_col][id_predicate] * predicates[id_predicate]
+
                     cta /= len(candidate["types"]) if len(candidate["types"]) > 0 else 1
                     candidate["features"]["cta"] = round(cta, 2)
                     candidate["features"]["ctaMax"] = ctaMax
                     
-                    cpa /= total_predicates if total_predicates > 0 else 1
+                    cpa /= len(predicates) if len(predicates) > 0 else 1
                     candidate["features"]["cpa"] = round(cpa, 2)
-                    candidate["features"]["cpaMax"] = cpaMax
+                    candidate["features"]["cpaMax"] = round(cpaMax, 2)
                     
                     candidate["features"]["diff"] = candidates[0]["features"]["cea"] - candidate["features"]["cea"]
                     
