@@ -1,5 +1,5 @@
 # selbat-scalable
-<img src="https://github.com/roby-avo/selbat-scalable/assets/64791054/79f99131-72c2-4fa7-9e93-50fc328f1903" width="200" height="200">
+<img src="https://github.com/roby-avo/selbat-scalable/assets/64791054/c1f091fd-c382-4d56-acd7-00ca6fc434f1" width="200" height="200">
 
 selBat provides a process that performs EL on tables. Given a KG containing a set of entities 𝐸 and a collection of named-entity mentions 𝑀, the goal of EL is to map each entity mention 𝑚 ∈ 𝑀 to its corresponding entity 𝑒 ∈ 𝐸 in the KG (CEA task). Moreover, given the subject column S, the approach provides the annotation, between S-column and other columns in the table, with a predicate in the KG (CPA task). Eventually, the approach provides the annotation for each column with a concept in the KG (CTA task). 
 
@@ -13,4 +13,4 @@ Selbat has been implemented to allow pipeline execution for large data processin
 
 
 Selbat pipeline
-![pipeline_v3](https://github.com/roby-avo/selbat-scalable/assets/64791054/44122dde-5071-4568-8719-7efe39b78d97)
+![pipeline_v3](https://github.com/roby-avo/selbat-scalable/assets/64791054/f322339b-6caa-4d7a-a710-681f2409c04b)
