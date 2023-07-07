@@ -10,7 +10,7 @@ services:
     env_file:
       - ./.env  
     ports:
-      - "${JUPYTER_PORT}:8888"
+      - "${MY_JUPYTER_PORT}:8888"
     restart: always  
     volumes:
       - ./work:/home/jovyan/work
