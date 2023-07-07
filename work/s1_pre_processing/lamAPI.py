@@ -6,8 +6,6 @@ headers = {
     'accept': 'application/json'
 }
 
-LAMAPI_TOKEN =  os.environ["LAMAPI_TOKEN"]
-
 class LamAPI():
     def __init__(self, LAMAPI_HOST, LAMAPI_HOST_PORT, client_key,  response_format="json") -> None:
         self.format = response_format
@@ -120,9 +118,9 @@ class LamAPI():
         return result
 
 
-    def lookup(self, string, ngrams=False, fuzzy=False, types=None, kg="wikidata", limit=10):
+    def lookup(self, string, ngrams=False, fuzzy=False, types=None, kg="wikidata", limit=100):
         params = {
-            'token': LAMAPI_TOKEN,
+            'token': self.client_key,
             'name': string,
             'ngrams': ngrams,
             'fuzzy': fuzzy,

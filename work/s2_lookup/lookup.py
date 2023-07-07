@@ -48,7 +48,7 @@ class Lookup:
         types = None
         result = None
         try:
-            result = self._lamAPI.lookup(cell, ngrams=True, fuzzy=False, types=types, kg=self._kg_ref, limit=self._limit)
+            result = self._lamAPI.lookup(cell, fuzzy=False, types=types, kg=self._kg_ref, limit=self._limit)
             if cell not in result:
                 raise Exception("Error from lamAPI")
             candidates = result[cell]    
