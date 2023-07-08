@@ -50,7 +50,7 @@ spec:
     
   - name: pre-processing
     container:
-      image: cremarco/data_preparation:latest
+      image: roby944/data_preparation:latest
       command: [sh, -c]
       args: ["python data_preparation.py"]
     outputs:
@@ -64,7 +64,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: cremarco/lookup:latest
+      image: roby944/lookup:latest
       command: [sh, -c]
       args: ["python lookup.py /tmp/file"]
     outputs:
@@ -78,7 +78,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: cremarco/features_extraction:latest
+      image: roby944/features_extraction:latest
       command: [sh, -c]
       args: ["python features_extraction.py /tmp/file"]
     outputs:
@@ -92,7 +92,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: cremarco/prediction:latest
+      image: roby944/prediction:latest
       command: [sh, -c]
       args: ["python prediction.py /tmp/file cea"]
     outputs:
@@ -106,7 +106,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: cremarco/features_extraction_revision:latest
+      image: roby944/features_extraction_revision:latest
       command: [sh, -c]
       args: ["python features_extraction_revision.py /tmp/file"]
     outputs:
@@ -120,7 +120,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: cremarco/prediction:latest
+      image: roby944/prediction:latest
       command: [sh, -c]
       args: ["python prediction.py /tmp/file score"]
     outputs:
@@ -134,7 +134,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: cremarco/export:latest
+      image: roby944/export:latest
       command: [sh, -c]
       args: ["python export.py /tmp/file"]
     outputs:
