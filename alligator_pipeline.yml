@@ -52,7 +52,7 @@ spec:
     container:
       image: roby944/data_preparation:latest
       command: [sh, -c]
-      args: ["python data_preparation.py"]
+      args: ["python data_preparation.py film.csv wikidata"]
     outputs:
       artifacts:
       - name: output
