@@ -56,7 +56,7 @@ class FeaturesExtractionRevision:
             for id_col, candidates in enumerate(row):
                 id_col = str(id_col)
                 history = set()
-                for candidate in candidates[0:3]:
+                for candidate in candidates[0:1]:
                     types = candidate["types"]
                     for t in types:
                         id_type = t["id"]
@@ -96,3 +96,4 @@ input["cpa"] = fe_revision._cta
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(input, indent=4))
+print(json.dumps(input), flush=True)

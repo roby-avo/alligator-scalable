@@ -44,3 +44,4 @@ Prediction(input, model).compute_prediction(feature_name)
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(input, indent=4))
+print(json.dumps(input), flush=True)

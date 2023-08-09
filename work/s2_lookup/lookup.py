@@ -43,7 +43,7 @@ class Lookup:
 
 
     def _get_candidates(self, cell, id_row):
-        print("Try lookup for cell:", cell)
+        #print("Try lookup for cell:", cell)
         candidates = []
         types = None
         result = None
@@ -74,3 +74,4 @@ input["candidates"] = p1._rows
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(input, indent=4))
+print(json.dumps(input), flush=True)

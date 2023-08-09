@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import time
 import json
+import sys
 from lamAPI import LamAPI
 
 
@@ -69,11 +70,12 @@ LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
 LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
 lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
 time = time
-name = "film.csv"
+name = sys.argv[1]
+kg_reference = sys.argv[2]
+
 input_file = pd.read_csv(name)
 rows = format_table(input_file.values.tolist())
 header = list(input_file.columns)
-kg_reference = "wikidata"
 column_metadata = {}
 target = None
 dp = DataPreparation(rows, lamAPI)
@@ -102,3 +104,4 @@ dp.rows_normalization()
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(output, indent=4)) 
+print(json.dumps(output), flush=True)

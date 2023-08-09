@@ -49,3 +49,4 @@ input["candidates"] = candidates
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(input, indent=4))
+print(json.dumps(input), flush=True)

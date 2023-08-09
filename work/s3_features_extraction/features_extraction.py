@@ -107,14 +107,14 @@ class FeaturesExtraction:
             literals = cand_lamapi_literals[id_subject]
             if "literals" in literals:
                 literals = literals['literals']
-            if len(literals[datatype.lower()]) == 0:
+            if len(literals[datatype]) == 0:
                 continue
             #subj_candidate["matches"][str(id_col_obj_col)] = []
             #subj_candidate["pred"][str(id_col_obj_col)] = {}
             #subj_cell.candidates_entities()[subject]["match_count"]["lit"] += 1
             max_score = 0
-            for predicate in literals[datatype.lower()]:
-                for valueFromKg in literals[datatype.lower()][predicate]:
+            for predicate in literals[datatype]:
+                for valueFromKg in literals[datatype][predicate]:
                     score = get_score_based_on_datatype(obj_cell, valueFromKg, datatype)
                     score = round(score, 3)
                     if score > 0:
@@ -148,3 +148,4 @@ FeaturesExtraction(input, lamAPI).compute_features()
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(input, indent=4))
+print(json.dumps(input), flush=True)
