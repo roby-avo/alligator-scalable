@@ -16,11 +16,9 @@ class FeaturesExtraction:
         for index, row in enumerate(rows):
             cells = row["data"]
             for id_col_ne_subj in target["NE"]:
-                ne_cell_subj = cells[id_col_ne_subj]
                 for id_col_ne_obj in target["NE"]:
                     if id_col_ne_subj == id_col_ne_obj:
                         continue
-                    ne_cell_obj = cells[id_col_ne_obj]
                     self._compute_similarity_between_ne_cells(index, id_col_ne_subj, id_col_ne_obj)
                 for id_col_lit_obj in target["LIT"]:
                     lit_cell_obj = cells[id_col_lit_obj]

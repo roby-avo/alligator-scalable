@@ -1,4 +1,8 @@
-import traceback
+import os
+from lamAPI import LamAPI
+import sys
+import json 
+
 
 class Lookup:
     def __init__(self, data:object, lamAPI):
@@ -28,7 +32,7 @@ class Lookup:
                     new_candidites.append({
                         "id": candidate["id"],
                         "name": candidate["name"],
-                        "descritpion": candidate["description"],
+                        "description": candidate["description"],
                         "types": candidate["types"],
                         "features": {feature:candidate.get(feature, 0) for feature in features},
                         "matches": {str(id_col):[] for id_col in range(len(cells))},
@@ -39,11 +43,12 @@ class Lookup:
 
 
     def _get_candidates(self, cell, id_row):
+        #print("Try lookup for cell:", cell)
         candidates = []
         types = None
         result = None
         try:
-            result = self._lamAPI.lookup(cell, ngrams=True, fuzzy=False, types=types, kg=self._kg_ref, limit=self._limit)
+            result = self._lamAPI.lookup(cell, fuzzy=False, types=types, kg=self._kg_ref, limit=self._limit)
             if cell not in result:
                 raise Exception("Error from lamAPI")
             candidates = result[cell]    
@@ -52,3 +57,21 @@ class Lookup:
             return []
             
         return candidates
+
+
+
+SAMPLE_SIZE = 25
+LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
+LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
+lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
+filename_path = sys.argv[1]
+
+with open(filename_path) as f:
+    input = json.loads(f.read())
+    
+p1 = Lookup(input, lamAPI)
+input["candidates"] = p1._rows
+
+with open("/tmp/output.json", "w") as f:
+    f.write(json.dumps(input, indent=4))
+print(json.dumps(input), flush=True)

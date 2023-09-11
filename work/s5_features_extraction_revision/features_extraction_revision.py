@@ -45,7 +45,7 @@ class FeaturesExtractionRevision:
                     candidate["features"]["cpa"] = round(cpa, 2)
                     candidate["features"]["cpaMax"] = round(cpaMax, 2)
                     
-                    candidate["features"]["diff"] = candidates[0]["features"]["cea"] - candidate["features"]["cea"]
+                    candidate["features"]["diff"] = candidates[0]["features"]["rho"] - candidate["features"]["rho"]
                     
                     features[int(id_col)].append(list(candidate["features"].values()))
         self._data["features"] = features          

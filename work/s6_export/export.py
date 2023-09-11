@@ -1,7 +1,7 @@
 import sys
 import json
 
-THRESHOLD = 0.03
+K = 0.6
 
 class Export:
     def __init__(self, data):
@@ -19,9 +19,13 @@ class Export:
             for id_col, candidates in enumerate(row):
                 wc = []
                 rank = candidates[0:20] if len(candidates) > 0 else []
-                for candidate in candidates:
-                    if (candidates[0]["score"] - candidate["score"]) < THRESHOLD:
-                        wc.append(candidate)
+                if len(candidates) > 0:
+                    if len(candidates) > 1:
+                        candidates[0]["delta"] = round(candidates[0]["rho2"] - candidates[1]["rho2"], 3)
+                    else:
+                        candidates[0]["delta"] = 1   
+                    candidates[0]["score"] = round((1-K) * candidates[0]["rho2"] + K * candidates[0]["delta"], 3)
+                    wc.append(candidates[0])        
                 
                 if len(wc) == 1:
                     cea[str(id_col)] = wc[0]["id"]

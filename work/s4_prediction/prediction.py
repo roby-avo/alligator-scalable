@@ -23,11 +23,11 @@ class Prediction:
                     index = indexes[id_col]
                     indexes[id_col] += 1
                     feature = round(float(prediction[id_col][index][1]), 3)
-                    if feature_name == "score": 
+                    if feature_name == "rho2": 
                         candidate[feature_name] = feature
                     else:
                         candidate["features"][feature_name] = feature    
-                if feature_name == "score":        
+                if feature_name == "rho2":        
                     candidates.sort(key=lambda x:x[feature_name], reverse=True)       
                 else:
                     candidates.sort(key=lambda x:x["features"][feature_name], reverse=True)    
@@ -38,10 +38,15 @@ feature_name = sys.argv[2]
 
 with open(filename_path) as f:
     input = json.loads(f.read())
+print("The file has been read correctly")
 
 model = load_model("neural_network.h5")
+print("The NN has been read correctly")
+
 Prediction(input, model).compute_prediction(feature_name)
+print("The NN has been applied correctly")
 
 with open("/tmp/output.json", "w") as f:
     f.write(json.dumps(input, indent=4))
+print("The file has been saved correctly")
 print(json.dumps(input), flush=True)

@@ -4,4 +4,4 @@ COPY . .
 ENV LAMAPI_ENDPOINT=https://lamapi.hel.sintef.cloud/
 ENV LAMAPI_TOKEN=SINTEF2023!
 RUN pip install -r requirements.txt
-CMD ["python", "prediction.py", "./output.json", "score"]
+#CMD ["python", "prediction.py", "./output.json", "score"]
