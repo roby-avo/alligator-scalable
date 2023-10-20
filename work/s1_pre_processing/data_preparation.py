@@ -1,8 +1,9 @@
 import os
 import pandas as pd
 import time
-import json
+import orjson
 import sys
+import traceback
 from lamAPI import LamAPI
 
 
@@ -92,16 +93,26 @@ output = {
     "time": time.time()
 }
 
-if len(column_metadata) == 0:
-    column_metadata, target = dp.compute_datatype()
-    column_metadata[str(target["SUBJ"])] = "SUBJ"
-    output["metadata"] = {
-        "column": [{"idColumn": int(id_col), "tag": column_metadata[id_col]} for id_col in column_metadata]
-    }
-    output["target"] = target
-    
-dp.rows_normalization()     
+print("Start data preparation")
 
-with open("/tmp/output.json", "w") as f:
-    f.write(json.dumps(output, indent=4)) 
-print(json.dumps(output), flush=True)
+try:
+    if len(column_metadata) == 0:
+        column_metadata, target = dp.compute_datatype()
+        column_metadata[str(target["SUBJ"])] = "SUBJ"
+        output["metadata"] = {
+            "column": [{"idColumn": int(id_col), "tag": column_metadata[id_col]} for id_col in column_metadata]
+        }
+        output["target"] = target
+        
+    dp.rows_normalization()     
+except Exception as e:
+    print(f"Error {str(e)}", traceback.format_exc())
+
+
+print("End data preparation")
+
+# Writing
+with open("/tmp/output.json", "wb") as f:
+    f.write(orjson.dumps(output, option=orjson.OPT_INDENT_2))
+
+print("The file has been saved correctly")

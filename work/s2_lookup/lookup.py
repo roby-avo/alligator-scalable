@@ -1,7 +1,7 @@
 import os
 from lamAPI import LamAPI
 import sys
-import json 
+import orjson
 import metrics as metrics
 import utils as utils
 
@@ -30,7 +30,12 @@ class Lookup:
         for i, cell in enumerate(cells):
             new_candidites = []
             if i in self._target["NE"]:
-                candidates = self._get_candidates(cell)
+                #candidates = self._get_candidates(cell)
+                if cell in cache:
+                    candidates = cache.get(cell, [])
+                else:
+                    candidates = self._get_candidates(cell)    
+
                 for candidate in candidates:
                     item = {
                         "id": candidate["id"],
@@ -68,6 +73,7 @@ class Lookup:
         return candidates
 
 
+print("Start lookup")
 
 SAMPLE_SIZE = 25
 LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
@@ -75,12 +81,20 @@ LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
 lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
 filename_path = sys.argv[1]
 
-with open(filename_path) as f:
-    input = json.loads(f.read())
-    
-p1 = Lookup(input, lamAPI)
-input["candidates"] = p1._rows
+# Reading
+with open(filename_path, "rb") as f:
+    input_data = orjson.loads(f.read())
 
-with open("/tmp/output.json", "w") as f:
-    f.write(json.dumps(input, indent=4))
-print(json.dumps(input), flush=True)
+with(open("./cache.json", "rb")) as f:
+    cache = orjson.loads(f.read())
+
+p1 = Lookup(input_data, lamAPI)
+input_data["candidates"] = p1._rows
+
+print("End lookup")
+
+# Writing
+with open("/tmp/output.json", "wb") as f:
+    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+
+print("End writing")

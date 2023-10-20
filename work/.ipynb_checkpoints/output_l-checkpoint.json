@@ -1,0 +1,1099 @@
+{
+    "name": "SN.csv",
+    "header": [
+        "buyer",
+        "aug_buyer_name",
+        "aug_url",
+        "aug_postal_town",
+        "aug_administrative_area_level_2",
+        "aug_administrative_area_level_1",
+        "aug_country"
+    ],
+    "rows": [
+        {
+            "idRow": 1,
+            "data": [
+                "allerdale borough council",
+                "allerdale borough council",
+                "http://www.allerdale.gov.uk/",
+                "workington",
+                "cumbria",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 2,
+            "data": [
+                "be first (regeneration) limited",
+                "be first",
+                "http://www.befirst.london/",
+                "barking",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 3,
+            "data": [
+                "birmingham city council",
+                "birmingham city council",
+                "http://www.birmingham.gov.uk/",
+                "birmingham",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 4,
+            "data": [
+                "birmingham city council",
+                "birmingham city council.",
+                "http://birmingham.gov.uk/",
+                "birmingham",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 5,
+            "data": [
+                "birmingham city council",
+                "birmingham city council",
+                "http://www.birmingham.gov.uk/",
+                "birmingham",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 6,
+            "data": [
+                "birmingham city council",
+                "birmingham city council.",
+                "http://birmingham.gov.uk/",
+                "birmingham",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 7,
+            "data": [
+                "birmingham city council",
+                "birmingham city council.",
+                "http://birmingham.gov.uk/",
+                "birmingham",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 8,
+            "data": [
+                "blackpool council",
+                "blackpool borough council",
+                "http://www.blackpool.gov.uk/",
+                "blackpool",
+                "blackpool",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 9,
+            "data": [
+                "bolsover district council",
+                "bolsover district council",
+                "https://www.bolsover.gov.uk/",
+                "chesterfield",
+                "derbyshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 10,
+            "data": [
+                "bradford metropolitan district council",
+                "city of bradford metropolitan district council",
+                "https://www.bradford.gov.uk/contactus",
+                "bradford",
+                "west yorkshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 11,
+            "data": [
+                "city of stoke-on-trent",
+                "stoke-on-trent city council",
+                "http://www.stoke.gov.uk/",
+                "stoke-on-trent",
+                "stoke-on-trent",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 12,
+            "data": [
+                "city of york council",
+                "city of york council",
+                "http://www.york.gov.uk/",
+                "york",
+                "york",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 13,
+            "data": [
+                "cleeve school & sixth form centre of excellence",
+                "cleeve school and sixth form centre of excellence",
+                "http://www.cleeveschool.net/",
+                "cheltenham",
+                "gloucestershire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 14,
+            "data": [
+                "cpd - construction division",
+                "construction procurement delivery (cpd)",
+                "https://www.finance-ni.gov.uk/construction-procurement-delivery",
+                "belfast",
+                "belfast",
+                "northern ireland",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 15,
+            "data": [
+                "cpd - construction division",
+                "construction procurement delivery (cpd)",
+                "https://www.finance-ni.gov.uk/construction-procurement-delivery",
+                "belfast",
+                "belfast",
+                "northern ireland",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 16,
+            "data": [
+                "defra network etendering portal",
+                "nobel house",
+                "nan",
+                "london",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 17,
+            "data": [
+                "derby city council",
+                "derby council house",
+                "http://www.derby.gov.uk/",
+                "derby",
+                "derby",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 18,
+            "data": [
+                "derby city council",
+                "derby city council",
+                "https://www.derby.gov.uk/",
+                "derby",
+                "derby",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 19,
+            "data": [
+                "derby city council",
+                "derby city council",
+                "https://www.derby.gov.uk/",
+                "derby",
+                "derby",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 20,
+            "data": [
+                "derby city council",
+                "derby city council",
+                "https://www.derby.gov.uk/",
+                "derby",
+                "derby",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 21,
+            "data": [
+                "derbyshire county council",
+                "derbyshire county council",
+                "http://www.derbyshire.gov.uk/",
+                "matlock",
+                "derbyshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 22,
+            "data": [
+                "doncaster mbc",
+                "doncaster council",
+                "http://www.doncaster.gov.uk/?utm medium=referral&utm source=google.com&utm campaign=local%20seo&utm content=doncaster%20council",
+                "doncaster",
+                "south yorkshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 23,
+            "data": [
+                "driver and vehcile licensing agency",
+                "dvla",
+                "https://www.gov.uk/government/organisations/driver-and-vehicle-licensing-agency",
+                "swansea",
+                "swansea",
+                "wales",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 24,
+            "data": [
+                "dudley metropolitan borough council",
+                "dudley metropolitan borough council",
+                "http://www.dudley.gov.uk/",
+                "dudley",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 25,
+            "data": [
+                "east kent hospitals university",
+                "kent and canterbury hospital",
+                "http://www.nhs.uk/services/hospitals/overview/defaultview.aspx?id=rvvkc",
+                "canterbury",
+                "kent",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 26,
+            "data": [
+                "elmbridge borough council",
+                "elmbridge borough council",
+                "http://www.elmbridge.gov.uk/leisure-and-culture/parks-and-play-areas/",
+                "esher",
+                "surrey",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 27,
+            "data": [
+                "falkirk council",
+                "falkirk council",
+                "https://www.falkirk.gov.uk/",
+                "falkirk",
+                "falkirk",
+                "scotland",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 28,
+            "data": [
+                "hampshire county council",
+                "hampshire county council",
+                "https://www.hants.gov.uk/aboutthecouncil/contact",
+                "winchester",
+                "hampshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 29,
+            "data": [
+                "hastings borough council",
+                "hastings borough council",
+                "http://www.hastings.gov.uk/",
+                "hastings",
+                "east sussex",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 30,
+            "data": [
+                "hereford &amp; worcester fire and rescue service",
+                "hereford",
+                "nan",
+                "hereford",
+                "herefordshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 31,
+            "data": [
+                "herefordshire council",
+                "herefordshire council",
+                "http://www.herefordshire.gov.uk/",
+                "hereford",
+                "herefordshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 32,
+            "data": [
+                "horsham district council",
+                "horsham district council",
+                "http://www.horsham.gov.uk/",
+                "horsham",
+                "west sussex",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 33,
+            "data": [
+                "isle of wight council",
+                "isle of wight council",
+                "https://www.iow.gov.uk/",
+                "newport",
+                "isle of wight",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 34,
+            "data": [
+                "kent county council",
+                "kent county council - maidstone",
+                "http://www.kent.gov.uk/",
+                "maidstone",
+                "kent",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 35,
+            "data": [
+                "kirklees council",
+                "civic centre",
+                "nan",
+                "huddersfield",
+                "west yorkshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 36,
+            "data": [
+                "kirklees council",
+                "kirklees council huddersfield customer service centre",
+                "http://www.kirklees.gov.uk/",
+                "huddersfield",
+                "west yorkshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 37,
+            "data": [
+                "l&amp;q construction",
+                "p & l properties",
+                "nan",
+                "high peak",
+                "derbyshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 38,
+            "data": [
+                "lancashire county council",
+                "lancashire county council",
+                "http://www.lancashire.gov.uk/",
+                "preston",
+                "lancashire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 39,
+            "data": [
+                "lincolnshire county council",
+                "lincolnshire county council",
+                "https://www.lincolnshire.gov.uk/",
+                "lincoln",
+                "lincolnshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 40,
+            "data": [
+                "london borough of bromley",
+                "bromley civic centre",
+                "http://www.bromley.gov.uk/",
+                "bromley",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 41,
+            "data": [
+                "manchester city council",
+                "manchester city council",
+                "http://www.manchester.gov.uk/",
+                "manchester",
+                "greater manchester",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 42,
+            "data": [
+                "manchester city council",
+                "manchester outer ring road",
+                "nan",
+                "nan",
+                "greater manchester",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 43,
+            "data": [
+                "manchester metropolitan university",
+                "manchester metropolitan university",
+                "http://www.mmu.ac.uk/",
+                "manchester",
+                "greater manchester",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 44,
+            "data": [
+                "met office",
+                "met office",
+                "https://www.metoffice.gov.uk/",
+                "exeter",
+                "devon",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 45,
+            "data": [
+                "mse group",
+                "britannia business park",
+                "nan",
+                "southend-on-sea",
+                "southend-on-sea",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 46,
+            "data": [
+                "n e l commissioning support unit",
+                "nhs nel csu",
+                "nan",
+                "london",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 47,
+            "data": [
+                "n e l commissioning support unit",
+                "nhs nel csu",
+                "nan",
+                "london",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 48,
+            "data": [
+                "nhs wales shared services partnership",
+                "nhs wales shared services partnership",
+                "https://nwssp.nhs.wales/",
+                "cardiff",
+                "rhondda cynon taff",
+                "wales",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 49,
+            "data": [
+                "north east lincolnshire council",
+                "engie",
+                "https://www.engie.co.uk/nel/",
+                "grimsby",
+                "north east lincolnshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 50,
+            "data": [
+                "north east lincolnshire council",
+                "north east lincolnshire council",
+                "http://www.nelincs.gov.uk/",
+                "grimsby",
+                "north east lincolnshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 51,
+            "data": [
+                "north east lincolnshire council",
+                "engie",
+                "https://www.engie.co.uk/nel/",
+                "grimsby",
+                "north east lincolnshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 52,
+            "data": [
+                "north east lincolnshire council",
+                "north east lincolnshire council",
+                "http://www.nelincs.gov.uk/",
+                "grimsby",
+                "north east lincolnshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 53,
+            "data": [
+                "north of england commissioning support unit",
+                "necs, john snow house",
+                "http://www.necsu.nhs.uk/",
+                "durham",
+                "county durham",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 54,
+            "data": [
+                "nuneaton &amp; bedworth community enterprises limited (nab)",
+                "nuneaton",
+                "nan",
+                "nan",
+                "warwickshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 55,
+            "data": [
+                "peabody trust",
+                "peabody",
+                "http://www.peabody.org.uk/",
+                "london",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 56,
+            "data": [
+                "places for people group limited",
+                "places for people",
+                "https://www.placesforpeople.co.uk/",
+                "preston",
+                "lancashire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 57,
+            "data": [
+                "royal borough of kensington and chelsea",
+                "kensington town hall",
+                "nan",
+                "london",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 58,
+            "data": [
+                "sandwell metropolitan borough council",
+                "sandwell m b c",
+                "nan",
+                "west bromwich",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 59,
+            "data": [
+                "solihull mbc (sol)",
+                "solihull metropolitan borough council",
+                "http://www.solihull.gov.uk/",
+                "solihull",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 60,
+            "data": [
+                "southend-on-sea borough council",
+                "southend connexions service",
+                "http://www.southendconnexions.co.uk/",
+                "southend-on-sea",
+                "southend-on-sea",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 61,
+            "data": [
+                "southend-on-sea borough council",
+                "southend borough council",
+                "http://southendyouthcouncil.co.uk/",
+                "southend-on-sea",
+                "southend-on-sea",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 62,
+            "data": [
+                "southport &amp; ormskirk hospital",
+                "southport",
+                "nan",
+                "southport",
+                "merseyside",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 63,
+            "data": [
+                "south tyneside council",
+                "south tyneside council",
+                "https://www.southtyneside.gov.uk/",
+                "south shields",
+                "tyne and wear",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 64,
+            "data": [
+                "south yorkshire mayoral combined authority group",
+                "sheffield city region",
+                "http://www.sheffieldcityregion.org.uk/",
+                "sheffield",
+                "south yorkshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 65,
+            "data": [
+                "sport england",
+                "sport england",
+                "http://www.sportengland.org/",
+                "london",
+                "greater london",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 66,
+            "data": [
+                "swindon borough council",
+                "swindon borough council",
+                "http://www.swindon.gov.uk/",
+                "swindon",
+                "swindon",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 67,
+            "data": [
+                "thanet district council",
+                "thanet district council",
+                "http://www.thanet.gov.uk/?utm source=gmb&utm medium=info&utm campaign=tdc&utm term=tdc",
+                "margate",
+                "kent",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 68,
+            "data": [
+                "the abbeyfield society",
+                "the abbeyfield society",
+                "https://www.abbeyfield.com/",
+                "st albans",
+                "hertfordshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 69,
+            "data": [
+                "the abbeyfield society",
+                "the abbeyfield society",
+                "https://www.abbeyfield.com/",
+                "st albans",
+                "hertfordshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 70,
+            "data": [
+                "the city of liverpool college",
+                "the city of liverpool college clarence street",
+                "http://www.liv-coll.ac.uk/",
+                "liverpool",
+                "merseyside",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 71,
+            "data": [
+                "thirteen housing group ltd",
+                "thirteen housing",
+                "http://www.thirteengroup.co.uk/",
+                "middlesbrough",
+                "middlesbrough",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 72,
+            "data": [
+                "transport for greater manchester",
+                "transport for greater manchester",
+                "http://www.tfgm.com/",
+                "manchester",
+                "greater manchester",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 73,
+            "data": [
+                "tyne and wear fire and rescue service (twfrs)",
+                "tyne and wear fire and rescue",
+                "http://www.twfire.gov.uk/btc",
+                "sunderland",
+                "tyne and wear",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 74,
+            "data": [
+                "united kingdom atomic energy authority",
+                "uk atomic energy authority",
+                "https://www.gov.uk/government/organisations/uk-atomic-energy-authority",
+                "abingdon",
+                "oxfordshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 75,
+            "data": [
+                "walsall council",
+                "walsall council school admissions",
+                "https://go.walsall.gov.uk/schools and learning/schools in walsall/school admissions",
+                "walsall",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 76,
+            "data": [
+                "walsall council",
+                "development management (planning permission)",
+                "nan",
+                "walsall",
+                "west midlands",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 77,
+            "data": [
+                "warrington borough council",
+                "warrington borough council building control",
+                "https://www.warrington.gov.uk/building-control",
+                "warrington",
+                "warrington",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 78,
+            "data": [
+                "warwickshire county council (wcc)",
+                "warwickshire county council",
+                "http://www.warwickshire.gov.uk/",
+                "warwick",
+                "warwickshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 79,
+            "data": [
+                "welwyn hatfield borough council",
+                "welwyn hatfield borough council",
+                "http://www.welhat.gov.uk/",
+                "welwyn garden city",
+                "hertfordshire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 80,
+            "data": [
+                "west sussex county council",
+                "west sussex county council",
+                "http://www.westsussex.gov.uk/",
+                "chichester",
+                "west sussex",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 81,
+            "data": [
+                "wigan council",
+                "wigan council",
+                "http://www.wigan.gov.uk/",
+                "wigan",
+                "greater manchester",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 82,
+            "data": [
+                "wigan council",
+                "wigan council",
+                "http://www.wigan.gov.uk/",
+                "wigan",
+                "greater manchester",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 83,
+            "data": [
+                "worcestershire acute hospitals nhs trust",
+                "alexandra hospital",
+                "http://www.worcsacute.nhs.uk/our-hospitals/alexandra-hospital-redditch/",
+                "redditch",
+                "worcestershire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 84,
+            "data": [
+                "worcestershire acute hospitals nhs trust",
+                "alexandra hospital",
+                "http://www.worcsacute.nhs.uk/our-hospitals/alexandra-hospital-redditch/",
+                "redditch",
+                "worcestershire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 85,
+            "data": [
+                "worcestershire county council",
+                "worcestershire county council",
+                "http://www.worcestershire.gov.uk/",
+                "worcester",
+                "worcestershire",
+                "england",
+                "united kingdom"
+            ]
+        },
+        {
+            "idRow": 86,
+            "data": [
+                "worcestershire county council",
+                "worcestershire county council",
+                "http://www.worcestershire.gov.uk/",
+                "worcester",
+                "worcestershire",
+                "england",
+                "united kingdom"
+            ]
+        }
+    ],
+    "metadata": {
+        "column": [
+            {
+                "idColumn": 0,
+                "tag": "SUBJ"
+            },
+            {
+                "idColumn": 1,
+                "tag": "NE"
+            },
+            {
+                "idColumn": 2,
+                "tag": "LIT"
+            },
+            {
+                "idColumn": 3,
+                "tag": "NE"
+            },
+            {
+                "idColumn": 4,
+                "tag": "NE"
+            },
+            {
+                "idColumn": 5,
+                "tag": "NE"
+            },
+            {
+                "idColumn": 6,
+                "tag": "NE"
+            }
+        ]
+    },
+    "target": {
+        "SUBJ": 0,
+        "NE": [
+            0,
+            1,
+            3,
+            4,
+            5,
+            6
+        ],
+        "LIT": [
+            2
+        ],
+        "LIT_DATATYPE": {
+            "2": "STRING"
+        }
+    },
+    "kg_reference": "wikidata",
+    "limit": 100,
+    "status": "DONE",
+    "time": 1697717179.4180708
+}

@@ -1,7 +1,11 @@
-FROM python:3.9-slim
+# Using roby944/jupyter as base image
+FROM roby944/jupyter
+
+# Set the working directory
 WORKDIR /code
+
+# Copy the current directory contents into the container
 COPY . .
-ENV LAMAPI_ENDPOINT=https://lamapi.hel.sintef.cloud/
-ENV LAMAPI_TOKEN=SINTEF2023!
-RUN pip install -r requirements.txt
-#CMD ["python", "prediction.py", "./output.json", "score"]
+
+# Define command to run the app
+CMD ["python", "prediction.py", "./output.json", "rho"]

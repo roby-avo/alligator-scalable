@@ -1,5 +1,5 @@
 import sys
-import json
+import orjson
 
 class FeaturesExtractionRevision:
     def __init__(self, data):
@@ -84,16 +84,22 @@ class FeaturesExtractionRevision:
             for id_predicate in self._cpa[id_col]:
                 self._cpa[id_col][id_predicate] = round(self._cpa[id_col][id_predicate]/n_rows, 2)    
 
+print("Start features extraction revision")
 
 filename_path = sys.argv[1]
-with open(filename_path) as f:
-    input = json.loads(f.read())
+# Reading
+with open(filename_path, "rb") as f:
+    input_data = orjson.loads(f.read())
 
-fe_revision = FeaturesExtractionRevision(input)
+fe_revision = FeaturesExtractionRevision(input_data)
 fe_revision.compute_features()
-input["cta"] = fe_revision._cta
-input["cpa"] = fe_revision._cta
+input_data["cta"] = fe_revision._cta
+input_data["cpa"] = fe_revision._cta
 
-with open("/tmp/output.json", "w") as f:
-    f.write(json.dumps(input, indent=4))
-print(json.dumps(input), flush=True)
+print("End features extraction revision")
+
+# Writing
+with open("/tmp/output.json", "wb") as f:
+    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+
+print("End writing")

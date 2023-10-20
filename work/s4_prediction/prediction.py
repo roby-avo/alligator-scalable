@@ -1,6 +1,6 @@
 from keras.models import load_model
 import sys
-import json
+import orjson
 
 class Prediction:
     def __init__(self, data, model):
@@ -32,21 +32,23 @@ class Prediction:
                 else:
                     candidates.sort(key=lambda x:x["features"][feature_name], reverse=True)    
 
+print("Start prediction")
 
 filename_path = sys.argv[1]
 feature_name = sys.argv[2]
 
-with open(filename_path) as f:
-    input = json.loads(f.read())
-print("The file has been read correctly")
+# Reading
+with open(filename_path, "rb") as f:
+    input_data = orjson.loads(f.read())
+
 
 model = load_model("neural_network.h5")
-print("The NN has been read correctly")
+Prediction(input_data, model).compute_prediction(feature_name)
 
-Prediction(input, model).compute_prediction(feature_name)
-print("The NN has been applied correctly")
+print("End prediction")
 
-with open("/tmp/output.json", "w") as f:
-    f.write(json.dumps(input, indent=4))
-print("The file has been saved correctly")
-print(json.dumps(input), flush=True)
+# Writing
+with open("/tmp/output.json", "wb") as f:
+    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+    
+print("End writing")

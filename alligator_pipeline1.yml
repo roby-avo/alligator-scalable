@@ -41,8 +41,8 @@ spec:
           artifacts:
           - name: file
             from: "{{steps.features-extraction-revision.outputs.artifacts.output}}"
-    - - name: export
-        template: export
+    - - name: decision
+        template: decision
         arguments:
           artifacts:
           - name: file
@@ -52,7 +52,7 @@ spec:
     container:
       image: roby944/data_preparation:latest
       command: [sh, -c]
-      args: ["python data_preparation.py film.csv wikidata"]
+      args: ["python data_preparation.py film_120.csv wikidata"]
     outputs:
       artifacts:
       - name: output
@@ -128,15 +128,15 @@ spec:
       - name: output
         path: /tmp/output.json
 
-  - name: export
+  - name: decision
     inputs:
       artifacts:
       - name: file
         path: /tmp/file
     container:
-      image: roby944/export:latest
+      image: roby944/decision:latest
       command: [sh, -c]
-      args: ["python export.py /tmp/file"]
+      args: ["python decision.py /tmp/file"]
     outputs:
       artifacts:
       - name: output

@@ -18,12 +18,15 @@ class LamAPI():
 
     def __to_format(self, response):
         if self.format == "json":
-            result = response.json()
-            for kg in ["wikidata", "dbpedia"]:
-                if kg in result:
-                    result = result[kg]
-                    break
-            return result
+            try:
+                result = response.json()
+                for kg in ["wikidata", "dbpedia"]:
+                    if kg in result:
+                        result = result[kg]
+                        break
+                return result
+            except:
+                return {}
         else:
             raise Exception("Sorry, Invalid format!") 
 

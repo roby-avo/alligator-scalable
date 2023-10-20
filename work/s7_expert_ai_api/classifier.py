@@ -1,16 +1,17 @@
 import sys
-import json
+import orjson
 import requests
 import urllib3
+import os
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-url = "https://deployenv6.expertcustomers.ai:8084/services/emd/analyze"
 headers = {
     "Content-Type": "text/plain",
 }
 
 class Classifier:
-    def __init__(self, data):
+    def __init__(self, endpoint, data):
+        self._endpoint = endpoint
         self._data = data
 
     def classify_description(self):
@@ -18,14 +19,18 @@ class Classifier:
             for candidates in row:
                 if len(candidates) > 0:
                     candidate = candidates[0]
-                    temp = candidate["name"] + " " +candidate["description"]
-                    temp=temp.encode('utf-8')
-                    categories = self._get_categories(temp)
-                    candidate["iptc_categories"] = categories["iptc_categories"]
-                    candidate["geo_categories"] = categories["geo_categories"]
+                    if candidate["id"] not in cache:
+                        temp = candidate["name"] + " " + candidate["description"]
+                        temp = temp.encode('utf-8')
+                        categories = self._get_categories(temp)["iptc_categories"]
+                    else:
+                        categories = cache.get(candidate["id"], [])
+                    candidate["categories"] = categories
+                    #candidate["iptc_categories"] = categories["iptc_categories"]
+                    #candidate["geo_categories"] = categories["geo_categories"]
 
     def _get_categories(self, data):
-        response = requests.post(url, headers=headers, data=data, verify=False)
+        response = requests.post(self._endpoint, headers=headers, data=data, verify=False)
         result = {"iptc_categories": [], "geo_categories": []}
         if response.status_code == 200:
             print("Request was successful")
@@ -40,15 +45,28 @@ class Classifier:
     
 
    
-    
+print("Start classifier")
 
 filename_path = sys.argv[1]
-with open(filename_path) as f:
-    input = json.loads(f.read())
-    
-classifier = Classifier(input)
-classifier.classify_description()
+# Reading
+with open(filename_path, "rb") as f:
+    input_data = orjson.loads(f.read())
 
-with open("/tmp/output.json", "w") as f:
-    f.write(json.dumps(input, indent=4))
-print(json.dumps(input), flush=True)
+with(open("./cache.json", "rb")) as f:
+    cache = orjson.loads(f.read())
+
+CLASSIFIER_ENDPOINT = os.environ["CLASSIFIER_ENDPOINT"]
+
+try:
+    classifier = Classifier(CLASSIFIER_ENDPOINT, input_data)
+    classifier.classify_description()
+except Exception as e:
+    print("Error with classifier, details:", str(e))
+
+print("End classifier")
+
+# Writing
+with open("/tmp/output.json", "wb") as f:
+    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+
+print("End writing")

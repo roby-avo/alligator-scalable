@@ -1,0 +1,1 @@
+argo submit -n argo alligator_pipeline1.yml

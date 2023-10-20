@@ -2,7 +2,10 @@ import metrics as metrics
 import os
 from lamAPI import LamAPI
 import sys
-import json 
+import orjson
+
+cache_obj = {}
+cache_lit = {}
 
 class FeaturesExtraction:
     def __init__(self, data, lamAPI):
@@ -37,15 +40,22 @@ class FeaturesExtraction:
     def _compute_similarity_between_ne_cells(self, id_row, id_col_subj_cell, id_col_obj_cell):
         subj_candidates = self._data["candidates"][id_row][id_col_subj_cell]
         obj_candidates = self._data["candidates"][id_row][id_col_obj_cell]
-        subj_id_candidates = [candidate["id"] for candidate in subj_candidates]
+        subj_id_candidates = [candidate["id"] for candidate in subj_candidates if candidate["id"] not in cache_obj]
         obj_id_candidates = [candidate["id"] for candidate in obj_candidates]
         
-        subjects_objects = self._lamAPI.objects(subj_id_candidates)
+        if len(subj_id_candidates) > 0:
+            subjects_objects = self._lamAPI.objects(subj_id_candidates)
+
         object_rel_score_buffer = {}
 
         for subj_candidate in subj_candidates:
             id_subject = subj_candidate["id"]
-            subj_candidate_objects = subjects_objects.get(id_subject, {}).get("objects", {})
+            #subj_candidate_objects = subjects_objects.get(id_subject, {}).get("objects", {})
+            #cache_obj[id_subject] = subj_candidate_objects
+            if id_subject not in cache_obj:
+                subj_candidate_objects = subjects_objects.get(id_subject, {}).get("objects", {})
+            else:    
+                subj_candidate_objects = cache_obj.get(id_subject, {})
             objects_set = set(subj_candidate_objects.keys())
             #subj_candidate["matches"][str(id_col_obj_cell)] = []
             #subj_candidate["pred"][str(id_col_obj_cell)] = {}
@@ -96,15 +106,24 @@ class FeaturesExtraction:
             return score
         
         subj_candidates = self._data["candidates"][id_row][id_col_subj_cell]
-        subj_id_candidates = [candidate["id"] for candidate in subj_candidates]
-        cand_lamapi_literals = self._lamAPI.literals(subj_id_candidates)
+        subj_id_candidates = [candidate["id"] for candidate in subj_candidates if candidate["id"] not in cache_lit]
+        if len(subj_id_candidates) > 0:
+            cand_lamapi_literals = self._lamAPI.literals(subj_id_candidates)
+            if len(cand_lamapi_literals) == 0:
+                return
+        
         datatype = obj_cell_datatype
         
         for subj_candidate in subj_candidates:
             id_subject = subj_candidate["id"]
-            literals = cand_lamapi_literals[id_subject]
+            #literals = cand_lamapi_literals[id_subject]
+            if id_subject not in cache_lit:
+                literals = cand_lamapi_literals.get(id_subject, {})
+            else:   
+                literals = cache_lit.get(id_subject, {})
             if "literals" in literals:
-                literals = literals['literals']
+                literals = literals['literals']    
+            #cache_lit[id_subject] = literals    
             if len(literals[datatype]) == 0:
                 continue
             #subj_candidate["matches"][str(id_col_obj_col)] = []
@@ -128,22 +147,32 @@ class FeaturesExtraction:
                         if score > subj_candidate["predicates"][str(id_col_obj_col)][predicate]:
                             subj_candidate["predicates"][str(id_col_obj_col)][predicate] = score    
                             
-            subj_candidate["features"]["p_subj_lit"] += round(max_score, 3) 
+            subj_candidate["features"]["p_subj_lit"] += max_score
+            subj_candidate["features"]["p_subj_lit"] = round(subj_candidate["features"]["p_subj_lit"], 3)
 
-
+print("Start features extraction")
 
 LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
 LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
 lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
 filename_path = sys.argv[1]
 
-with open(filename_path) as f:
-    input = json.loads(f.read())
-    
+# Reading
+with open(filename_path, "rb") as f:
+    input_data = orjson.loads(f.read())
 
-FeaturesExtraction(input, lamAPI).compute_features()
+with(open("./cache_obj.json", "rb")) as f:
+    cache_obj = orjson.loads(f.read())
 
+with(open("./cache_lit.json", "rb")) as f:
+    cache_lit = orjson.loads(f.read())
 
-with open("/tmp/output.json", "w") as f:
-    f.write(json.dumps(input, indent=4))
-print(json.dumps(input), flush=True)
+FeaturesExtraction(input_data, lamAPI).compute_features()
+
+print("Finish features extraction")
+
+# Writing
+with open("/tmp/output.json", "wb") as f:
+    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+
+print("Finish writing")
