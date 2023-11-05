@@ -58,7 +58,7 @@ spec:
     container:
       image: roby944/data_preparation:latest
       command: [sh, -c]
-      args: ["python data_preparation.py SN.csv wikidata"]
+      args: ["python data_preparation.py  services.json SN_latest.csv wikidata"]
     outputs:
       artifacts:
       - name: output
@@ -161,3 +161,5 @@ spec:
       artifacts:
       - name: output
         path: /tmp/output.json
+      - name: csv
+        path: /tmp/output.csv  

@@ -8,8 +8,9 @@ from lamAPI import LamAPI
 
 
 class DataPreparation:
-    def __init__(self, rows, lamAPI):
+    def __init__(self, rows, no_annotated_columns_index, lamAPI):
         self._rows = rows
+        self._no_annotated_columns_index = no_annotated_columns_index
         self._lamAPI = lamAPI
 
   
@@ -17,7 +18,7 @@ class DataPreparation:
         new_rows = []
         column_metadata = {}
         columns_data = {str(i):[] for i in range(0, len(self._rows[0]['data']))}
-        target = {"SUBJ": 0, "NE": [], "LIT": [], "LIT_DATATYPE": {}}
+        target = {"SUBJ": 0, "NE": [], "LIT": [], "LIT_DATATYPE": {}, "NO_ANN": []}
         for row in self._rows:
             cells = []
             for id_col, cell in enumerate(row["data"]):
@@ -27,18 +28,23 @@ class DataPreparation:
 
         first_NE_column = False     
         for id_col in columns_data:
-            metadata = self._lamAPI.literal_recognizer(columns_data[id_col])
-            max_datatype = max(metadata, key=metadata.get)
-            if max_datatype == "ENTITY":
-                column_metadata[id_col] = "NE"
-                target['NE'].append(int(id_col)) 
-                if not first_NE_column:
-                    target["SUBJ"] = int(id_col)
-                first_NE_column = True
+            if int(id_col) in self._no_annotated_columns_index:
+                column_metadata[id_col] = "NO_ANN"
+                target['NO_ANN'].append(int(id_col))
+                continue
             else:
-                column_metadata[id_col] = "LIT"
-                target['LIT'].append(int(id_col))
-                target['LIT_DATATYPE'][str(id_col)] = max_datatype
+                metadata = self._lamAPI.literal_recognizer(columns_data[id_col])
+                max_datatype = max(metadata, key=metadata.get)
+                if max_datatype == "ENTITY":
+                    column_metadata[id_col] = "NE"
+                    target['NE'].append(int(id_col)) 
+                    if not first_NE_column:
+                        target["SUBJ"] = int(id_col)
+                    first_NE_column = True
+                else:
+                    column_metadata[id_col] = "LIT"
+                    target['LIT'].append(int(id_col))
+                    target['LIT_DATATYPE'][str(id_col)] = max_datatype
                 
         return column_metadata, target        
 
@@ -66,23 +72,39 @@ def format_table(table_df):
   
     return rows
 
+services = {
+    "linker" : {
+      "columns": ["buyer", "aug_buyer_name", "aug_url", "aug_postal_town", "aug_administrative_area_level_2", "aug_administrative_area_level_1", "aug_country"]
 
+    },
+    "classifier": {
+      "columns": [["title", "description (SN)", "category"], []]
+    } 
+}
 LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
 LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
 lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
 time = time
-name = sys.argv[1]
-kg_reference = sys.argv[2]
+file_services_name = sys.argv[1]
+file_name = sys.argv[2]
+kg_reference = sys.argv[3]
 
-input_file = pd.read_csv(name)
+input_file = pd.read_csv(file_name)
+
+with open(file_services_name, "rb") as f:
+    services = orjson.loads(f.read())
+
 rows = format_table(input_file.values.tolist())
 header = list(input_file.columns)
+no_annotated_columns = list(set(header) - set(services["linker"]["columns"]))
+no_annotated_columns_index = [header.index(col) for col in no_annotated_columns]
+
 column_metadata = {}
 target = None
-dp = DataPreparation(rows, lamAPI)
+dp = DataPreparation(rows, no_annotated_columns_index, lamAPI)
 
 output = {
-    "name": name,
+    "name": file_name,
     "header": header,
     "rows": rows,
     "metadata": None,
@@ -90,7 +112,8 @@ output = {
     "kg_reference": kg_reference,
     "limit": 100,
     "status": "DONE", 
-    "time": time.time()
+    "time": time.time(),
+    "services": services
 }
 
 print("Start data preparation")

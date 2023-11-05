@@ -4,8 +4,6 @@ from lamAPI import LamAPI
 import sys
 import orjson
 
-cache_obj = {}
-cache_lit = {}
 
 class FeaturesExtraction:
     def __init__(self, data, lamAPI):

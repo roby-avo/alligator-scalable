@@ -6,35 +6,27 @@ headers = {
     'accept': 'application/json'
 }
 
-LAMAPI_TOKEN =  os.environ["LAMAPI_TOKEN"]
-
 class LamAPI():
     def __init__(self, LAMAPI_HOST, LAMAPI_HOST_PORT, client_key,  response_format="json") -> None:
         self.format = response_format
-        base_url = f"http://{LAMAPI_HOST}:{LAMAPI_HOST_PORT}/"
+        base_url = LAMAPI_HOST
+        if LAMAPI_HOST_PORT is not None:
+            base_url = f"{LAMAPI_HOST}:{LAMAPI_HOST_PORT}/"
         self._url = URLs(base_url, response_format=response_format)
         self.client_key = client_key
 
 
-    def _exec_post(sefl, params, json_data, url, kg):
-        response = requests.post(url, 
-                                params=params, 
-                                headers=headers, 
-                                json=json_data)
-        result = response.json()
-        if kg in result:
-            result = result[kg]
-        return result  
-
-
     def __to_format(self, response):
         if self.format == "json":
-            result = response.json()
-            for kg in ["wikidata", "dbpedia"]:
-                if kg in result:
-                    result = result[kg]
-                    break
-            return result
+            try:
+                result = response.json()
+                for kg in ["wikidata", "dbpedia"]:
+                    if kg in result:
+                        result = result[kg]
+                        break
+                return result
+            except:
+                return {}
         else:
             raise Exception("Sorry, Invalid format!") 
 
@@ -129,9 +121,9 @@ class LamAPI():
         return result
 
 
-    def lookup(self, string, ngrams=False, fuzzy=False, types=None, kg="wikidata", limit=10):
+    def lookup(self, string, ngrams=False, fuzzy=False, types=None, kg="wikidata", limit=100):
         params = {
-            'token': LAMAPI_TOKEN,
+            'token': self.client_key,
             'name': string,
             'ngrams': ngrams,
             'fuzzy': fuzzy,

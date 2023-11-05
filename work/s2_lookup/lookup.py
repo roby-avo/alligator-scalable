@@ -26,7 +26,11 @@ class Lookup:
                     "ed_score", "jaccard_score", "jaccardNgram_score", "cosine_similarity",
                     "p_subj_ne", "p_subj_lit", "p_obj_ne", "desc", "descNgram", 
                     "cpa", "cpaMax", "cta", "ctaMax", "rho", "diff"]
-        row_content_norm = utils.clean_str(" ".join(cells))
+        cells_to_consider = []
+        for i, cell in enumerate(cells):
+            if i not in self._target.get("NO_ANN", []):
+                cells_to_consider.append(cell)
+        row_content_norm = utils.clean_str(" ".join(cells_to_consider))  
         for i, cell in enumerate(cells):
             new_candidites = []
             if i in self._target["NE"]:
@@ -35,7 +39,6 @@ class Lookup:
                     candidates = cache.get(cell, [])
                 else:
                     candidates = self._get_candidates(cell)    
-
                 for candidate in candidates:
                     item = {
                         "id": candidate["id"],
