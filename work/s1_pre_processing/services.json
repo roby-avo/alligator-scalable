@@ -1,20 +1,26 @@
 {
-    "linker" : {
-      "columns": ["buyer", "aug_buyer_name", "aug_url", "aug_postal_town", "aug_administrative_area_level_2", "aug_administrative_area_level_1", "aug_country"]
-
+    "LinkR" : {
+      "columns": ["buyer", "postal_town", "admin_level_2", "admin_level_1", "country"],
+      "extension": ["buyer"]
     },
-    "classifier": [
-        {
-          "target": "buyer",
-          "columns": ["title", "description (SN)",	"category"]
-        },
-        {
-          "target": "buyer",
-          "columns": ["name", "description"]
-        },
-        {
-          "target": "aug_buyer_name",
-          "columns": ["name", "description"]
-        }
+    "StructR": [
+      {
+        "columns": ["name", "description"],
+        "extension": "buyer"
+      },
+      {
+        "columns": ["tender_title", "tender_description", "tender_category"],
+        "extension": "buyer"
+      }
+    ],
+    "ClassifieR": [
+      {
+        "columns": ["name", "description"],
+        "extension": "buyer"
+      },
+      {
+        "columns": ["tender_title", "tender_description", "tender_category"],
+        "extension": "buyer"
+      }
     ]
 }

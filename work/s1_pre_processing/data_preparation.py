@@ -96,7 +96,7 @@ with open(file_services_name, "rb") as f:
 
 rows = format_table(input_file.values.tolist())
 header = list(input_file.columns)
-no_annotated_columns = list(set(header) - set(services["linker"]["columns"]))
+no_annotated_columns = list(set(header) - set(services["LinkR"]["columns"]))
 no_annotated_columns_index = [header.index(col) for col in no_annotated_columns]
 
 column_metadata = {}

@@ -1,0 +1,4 @@
+orjson
+aiohttp
+pandas
+urllib3

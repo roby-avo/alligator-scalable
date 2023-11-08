@@ -1,6 +1,11 @@
+import os
+import tensorflow as tf
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 from keras.models import load_model
 import sys
-import json
+import orjson
 
 class Prediction:
     def __init__(self, data, model):
@@ -13,7 +18,7 @@ class Prediction:
         for column_features in self._data["features"]:
             pred = [] 
             if len(column_features) > 0:
-                pred = self._model.predict(column_features)
+                pred = self._model.predict(column_features, batch_size=10000)
             prediction.append(pred)
             indexes.append(0)
         
@@ -23,30 +28,32 @@ class Prediction:
                     index = indexes[id_col]
                     indexes[id_col] += 1
                     feature = round(float(prediction[id_col][index][1]), 3)
-                    if feature_name == "score": 
+                    if feature_name == "rho2": 
                         candidate[feature_name] = feature
                     else:
                         candidate["features"][feature_name] = feature    
-                if feature_name == "score":        
+                if feature_name == "rho2":        
                     candidates.sort(key=lambda x:x[feature_name], reverse=True)       
                 else:
                     candidates.sort(key=lambda x:x["features"][feature_name], reverse=True)    
 
+print("Start prediction")
 
 filename_path = sys.argv[1]
 feature_name = sys.argv[2]
 
-with open(filename_path) as f:
-    input = json.loads(f.read())
-print("The file has been read correctly")
+# Reading
+with open(filename_path, "rb") as f:
+    input_data = orjson.loads(f.read())
+
 
 model = load_model("neural_network.h5")
-print("The NN has been read correctly")
+Prediction(input_data, model).compute_prediction(feature_name)
 
-Prediction(input, model).compute_prediction(feature_name)
-print("The NN has been applied correctly")
+print("End prediction")
 
-with open("/tmp/output.json", "w") as f:
-    f.write(json.dumps(input, indent=4))
-print("The file has been saved correctly")
-print(json.dumps(input), flush=True)
+# Writing
+with open("/tmp/output.json", "wb") as f:
+    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+    
+print("End writing")

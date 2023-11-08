@@ -1,12 +1,9 @@
 import sys
 import orjson
-import requests
 import urllib3
 import os
 import aiohttp
-import ssl
 import asyncio
-import time
 import traceback 
 import hashlib
 
@@ -25,17 +22,16 @@ class Classifier:
 
     async def classify_description(self):
         tasks = []
-        for id_row, row in enumerate(self._data["candidates"]):
+        for id_row, row in enumerate(self._data["cea"]):
             for columnn_to_classify in self._columns_to_classify:
-                target = columnn_to_classify["target"]
+                target = columnn_to_classify["extension"]
                 columns = columnn_to_classify["columns"]
                 id_col = self._data["header"].index(target)
                 candidates = row[id_col]
                 if len(candidates) == 0:
                     continue
                 candidate = candidates[0]        
-                key = " ".join([candidate["id"]]+columns)
-               
+                
                 if columns == ["name", "description"]:  
                     text = candidate["name"] + " " + candidate["description"]
                 else:
@@ -53,16 +49,16 @@ class Classifier:
 
     async def send_request(self, session, candidate, columns, data):
         key = " ".join([candidate["id"]] + columns + [self._generate_short_fingerprint(str(data))])
-        categories = cache.get(key)
-        if categories is None:
+        result = cache.get(key)
+        if result is None:
             async with session.post(self._endpoint, headers=headers, data=data, ssl=False) as response:
                 response_json = await response.json()
                 async with self._lock:  # Acquire the lock before accessing the cache
                     # Update the cache while the lock is held
-                    cache[key] = response_json["iptc_categories"]
-                candidate[" ".join(columns)] = response_json["iptc_categories"]
+                    cache[key] = response_json["analysis"]["mainTopics"]
+                candidate["_".join(columns)+"_standard_taxonomy"] = [f"{topic['label']} {topic['score']}" for topic in response_json["analysis"]["mainTopics"]]
         else:
-            candidate[" ".join(columns)] = categories
+            candidate["_".join(columns)+"_standard_taxonomy"] = result
         return    
 
     async def run_all_requests(self, tasks_data):
@@ -87,10 +83,10 @@ async def main():
     with open(filename_path, "rb") as f:
         input_data = orjson.loads(f.read())
 
-    CLASSIFIER_ENDPOINT = os.environ["CLASSIFIER_ENDPOINT"]
+    ANALYZER_ENDPOINT = os.environ["ANALYZER_ENDPOINT"]
 
     try:
-        classifier = Classifier(CLASSIFIER_ENDPOINT, input_data, input_data["services"]["classifier"])
+        classifier = Classifier(ANALYZER_ENDPOINT, input_data, input_data["services"]["StructR"])
         responses = await classifier.classify_description()
         print(responses)
     except Exception as e:

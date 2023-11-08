@@ -47,7 +47,7 @@ with open(filename_path, "rb") as f:
     input_data = orjson.loads(f.read())
 
 decision = Decision(input_data)
-cea, candidates = decision.extract_cea_and_candidates_scored_data()
+cea, candidates, output = decision.extract_cea_and_candidates_scored_data()
 input_data["cea"] = cea
 input_data["candidates"] = candidates
 
