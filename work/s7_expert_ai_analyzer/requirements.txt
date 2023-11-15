@@ -1,3 +1,4 @@
 orjson
 aiohttp
 urllib3
+pandas

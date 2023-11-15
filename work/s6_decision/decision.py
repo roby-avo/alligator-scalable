@@ -3,6 +3,7 @@ import orjson
 import pandas as pd
 
 K = 0.6
+SIGMA = 0.5
 
 class Decision:
     def __init__(self, data):
@@ -29,6 +30,8 @@ class Decision:
                         
                 if len(wc) == 1:
                     cea[str(id_col)] = wc[0]["id"]
+                    if wc[0]["score"] > SIGMA:
+                        wc[0]["match"] = True
 
                 winning_candidates.append(wc)
                 rankend_candidates.append(rank)
@@ -37,8 +40,33 @@ class Decision:
             candidates_scored_data.append(rankend_candidates)
 
         return cea_data, candidates_scored_data
+    
 
-   
+    def get_csv(self):
+        header = []
+        for col in self._data["header"]:
+            header.append(col)
+            if col in self._data["services"]["LinkR"]["extension"]:
+                for col_to_add in self._data["services"]["LinkR"]["extension"][col]:
+                    header.append(f"{col_to_add}")
+
+        rows = []
+        for id_row, row in enumerate(self._data["cea"]):
+            cells = []
+            for id_col, col in enumerate(row):
+                cells.append(self._data["rows"][id_row]["data"][id_col])
+                if self._data["header"][id_col] in self._data["services"]["LinkR"]["extension"]:
+                    values = ["Null", "Null", "Null"]
+                    for candidate in col:
+                        if candidate["match"]:
+                            values[0] = candidate["id"]
+                            values[1] = candidate["name"]
+                            values[2] = candidate["description"]
+                    cells.extend(values)
+            rows.append(cells)
+        return pd.DataFrame(rows, columns=header)
+
+
 print ("Start decision")    
 
 filename_path = sys.argv[1]
@@ -50,6 +78,9 @@ decision = Decision(input_data)
 cea, candidates = decision.extract_cea_and_candidates_scored_data()
 input_data["cea"] = cea
 input_data["candidates"] = candidates
+
+
+decision.get_csv().to_csv("/tmp/output.csv", index=False)
 
 print ("End decision")
 

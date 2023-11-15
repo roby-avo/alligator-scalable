@@ -1,26 +1,26 @@
 {
     "LinkR" : {
       "columns": ["buyer", "postal_town", "admin_level_2", "admin_level_1", "country"],
-      "extension": ["buyer"]
+      "extension": {"buyer": ["id", "name", "description"]}
     },
     "StructR": [
       {
         "columns": ["name", "description"],
-        "extension": "buyer"
+        "extension": {"description": ["standard_context"]}
       },
       {
         "columns": ["tender_title", "tender_description", "tender_category"],
-        "extension": "buyer"
+        "extension": {"tender_description": ["standard_context"]}
       }
     ],
-    "ClassifieR": [
+    "ClassifiR": [
       {
         "columns": ["name", "description"],
-        "extension": "buyer"
+        "extension": {"description": ["IPTC"]}
       },
       {
         "columns": ["tender_title", "tender_description", "tender_category"],
-        "extension": "buyer"
+        "extension": {"tender_description": ["IPTC"]}
       }
     ]
 }

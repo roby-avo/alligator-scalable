@@ -53,18 +53,22 @@ spec:
           artifacts:
           - name: file
             from: "{{steps.decision.outputs.artifacts.output}}"
+          - name: file2
+            from: "{{steps.decision.outputs.artifacts.csv}}"
     - - name: classifier
         template: classifier
         arguments:
           artifacts:
           - name: file
-            from: "{{steps.analyzer.outputs.artifacts.output}}"                                                        
+            from: "{{steps.analyzer.outputs.artifacts.output}}"
+          - name: file2
+            from: "{{steps.analyzer.outputs.artifacts.csv}}"                                                          
     
   - name: pre-processing
     container:
       image: roby944/data_preparation:latest
       command: [sh, -c]
-      args: ["python data_preparation.py  services.json SN_demo0711.csv wikidata"]
+      args: ["python data_preparation.py services.json SN_demo0711.csv wikidata"]
     outputs:
       artifacts:
       - name: output
@@ -153,30 +157,38 @@ spec:
       artifacts:
       - name: output
         path: /tmp/output.json
+      - name: csv
+        path: /tmp/output.csv   
   
   - name: analyzer
     inputs:
       artifacts:
       - name: file
         path: /tmp/file
+      - name: file2
+        path: /tmp/file2
     container:
       image: roby944/analyzer:latest
       command: [sh, -c]
-      args: ["python analyzer.py /tmp/file"]
+      args: ["python analyzer.py /tmp/file /tmp/file2"]
     outputs:
       artifacts:
       - name: output
         path: /tmp/output.json
+      - name: csv
+        path: /tmp/output.csv 
   
   - name: classifier
     inputs:
       artifacts:
       - name: file
         path: /tmp/file
+      - name: file2
+        path: /tmp/file2  
     container:
       image: roby944/classifier:latest
       command: [sh, -c]
-      args: ["python classifier.py /tmp/file"]
+      args: ["python classifier.py /tmp/file /tmp/file2"]
     outputs:
       artifacts:
       - name: output

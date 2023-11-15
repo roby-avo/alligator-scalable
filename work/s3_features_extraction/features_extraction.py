@@ -54,6 +54,7 @@ class FeaturesExtraction:
                 subj_candidate_objects = subjects_objects.get(id_subject, {}).get("objects", {})
             else:    
                 subj_candidate_objects = cache_obj.get(id_subject, {})
+                cache_obj[id_subject] = subj_candidate_objects
             objects_set = set(subj_candidate_objects.keys())
             #subj_candidate["matches"][str(id_col_obj_cell)] = []
             #subj_candidate["pred"][str(id_col_obj_cell)] = {}
@@ -119,6 +120,8 @@ class FeaturesExtraction:
                 literals = cand_lamapi_literals.get(id_subject, {})
             else:   
                 literals = cache_lit.get(id_subject, {})
+                cache_lit[id_subject] = literals
+
             if "literals" in literals:
                 literals = literals['literals']    
             #cache_lit[id_subject] = literals    
@@ -172,5 +175,14 @@ print("Finish features extraction")
 # Writing
 with open("/tmp/output.json", "wb") as f:
     f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+
+# Writing
+with open("/tmp/cache_obj.json", "wb") as f:
+    f.write(orjson.dumps(cache_obj, option=orjson.OPT_INDENT_2))
+
+# Writing
+with open("/tmp/cache_lit.json", "wb") as f:
+    f.write(orjson.dumps(cache_lit, option=orjson.OPT_INDENT_2))
+
 
 print("Finish writing")

@@ -72,15 +72,6 @@ def format_table(table_df):
   
     return rows
 
-services = {
-    "linker" : {
-      "columns": ["buyer", "aug_buyer_name", "aug_url", "aug_postal_town", "aug_administrative_area_level_2", "aug_administrative_area_level_1", "aug_country"]
-
-    },
-    "classifier": {
-      "columns": [["title", "description (SN)", "category"], []]
-    } 
-}
 LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
 LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
 lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
@@ -98,6 +89,7 @@ rows = format_table(input_file.values.tolist())
 header = list(input_file.columns)
 no_annotated_columns = list(set(header) - set(services["LinkR"]["columns"]))
 no_annotated_columns_index = [header.index(col) for col in no_annotated_columns]
+#no_annotated_columns_index = []
 
 column_metadata = {}
 target = None

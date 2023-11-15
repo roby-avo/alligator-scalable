@@ -38,7 +38,9 @@ class Lookup:
                 if cell in cache:
                     candidates = cache.get(cell, [])
                 else:
-                    candidates = self._get_candidates(cell)    
+                    candidates = self._get_candidates(cell)
+                    cache[cell] = candidates    
+                    
                 for candidate in candidates:
                     item = {
                         "id": candidate["id"],
@@ -47,7 +49,8 @@ class Lookup:
                         "types": candidate["types"],
                         "features": {feature:candidate.get(feature, 0) for feature in features},
                         "matches": {str(id_col):[] for id_col in range(len(cells))},
-                        "predicates": {str(id_col):{} for id_col in range(len(cells))}
+                        "predicates": {str(id_col):{} for id_col in range(len(cells))},
+                        "match": False
                     }
                     new_candidites.append(item)
                     desc_norm = utils.clean_str(candidate["description"])
@@ -99,5 +102,9 @@ print("End lookup")
 # Writing
 with open("/tmp/output.json", "wb") as f:
     f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+
+# Writing
+with open("/tmp/cache.json", "wb") as f:
+    f.write(orjson.dumps(cache, option=orjson.OPT_INDENT_2))
 
 print("End writing")
