@@ -4,8 +4,10 @@ import time
 import orjson
 import sys
 import traceback
+import asyncio
 from lamAPI import LamAPI
 
+MAXIMUM_ROWS_TO_BE_ANALYZED = 50
 
 class DataPreparation:
     def __init__(self, rows, no_annotated_columns_index, lamAPI):
@@ -14,18 +16,17 @@ class DataPreparation:
         self._lamAPI = lamAPI
 
   
-    def compute_datatype(self):
+    async def compute_datatype(self):
         new_rows = []
         column_metadata = {}
         columns_data = {str(i):[] for i in range(0, len(self._rows[0]['data']))}
         target = {"SUBJ": 0, "NE": [], "LIT": [], "LIT_DATATYPE": {}, "NO_ANN": []}
-        for row in self._rows:
+        for row in self._rows[:MAXIMUM_ROWS_TO_BE_ANALYZED]:
             cells = []
             for id_col, cell in enumerate(row["data"]):
                 columns_data[str(id_col)].append(str(cell))
                 cells.append(self._clean_str(row["data"][id_col]))
             new_rows.append({"idRow": row["idRow"], "data": cells})    
-
         first_NE_column = False     
         for id_col in columns_data:
             if int(id_col) in self._no_annotated_columns_index:
@@ -33,7 +34,7 @@ class DataPreparation:
                 target['NO_ANN'].append(int(id_col))
                 continue
             else:
-                metadata = self._lamAPI.literal_recognizer(columns_data[id_col])
+                metadata = await self._lamAPI.literal_recognizer(columns_data[id_col])
                 max_datatype = max(metadata, key=metadata.get)
                 if max_datatype == "ENTITY":
                     column_metadata[id_col] = "NE"
@@ -74,60 +75,66 @@ def format_table(table_df):
 
 LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
 LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
-lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
+LAMAPI_HOST = f"{LAMAPI_HOST}:{LAMAPI_PORT}"
+lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_TOKEN)
 time = time
 file_services_name = sys.argv[1]
 file_name = sys.argv[2]
 kg_reference = sys.argv[3]
 
-input_file = pd.read_csv(file_name)
 
-with open(file_services_name, "rb") as f:
-    services = orjson.loads(f.read())
+async def main():
+    input_file = pd.read_csv(file_name)
 
-rows = format_table(input_file.values.tolist())
-header = list(input_file.columns)
-no_annotated_columns = list(set(header) - set(services["LinkR"]["columns"]))
-no_annotated_columns_index = [header.index(col) for col in no_annotated_columns]
-#no_annotated_columns_index = []
+    with open(file_services_name, "rb") as f:
+        services = orjson.loads(f.read())
 
-column_metadata = {}
-target = None
-dp = DataPreparation(rows, no_annotated_columns_index, lamAPI)
+    rows = format_table(input_file.values.tolist())
+    header = list(input_file.columns)
+    no_annotated_columns = list(set(header) - set(services["LinkR"]["columns"]))
+    no_annotated_columns_index = [header.index(col) for col in no_annotated_columns]
+    #no_annotated_columns_index = []
 
-output = {
-    "name": file_name,
-    "header": header,
-    "rows": rows,
-    "metadata": None,
-    "target": None,
-    "kg_reference": kg_reference,
-    "limit": 100,
-    "status": "DONE", 
-    "time": time.time(),
-    "services": services
-}
+    column_metadata = {}
+    target = None
+    dp = DataPreparation(rows, no_annotated_columns_index, lamAPI)
 
-print("Start data preparation")
+    output = {
+        "name": file_name,
+        "header": header,
+        "rows": rows,
+        "metadata": None,
+        "target": None,
+        "kg_reference": kg_reference,
+        "limit": 100,
+        "status": "DONE", 
+        "time": time.time(),
+        "services": services
+    }
 
-try:
-    if len(column_metadata) == 0:
-        column_metadata, target = dp.compute_datatype()
-        column_metadata[str(target["SUBJ"])] = "SUBJ"
-        output["metadata"] = {
-            "column": [{"idColumn": int(id_col), "tag": column_metadata[id_col]} for id_col in column_metadata]
-        }
-        output["target"] = target
-        
-    dp.rows_normalization()     
-except Exception as e:
-    print(f"Error {str(e)}", traceback.format_exc())
+    print("Start data preparation")
+
+    try:
+        if len(column_metadata) == 0:
+            column_metadata, target = await dp.compute_datatype()
+            column_metadata[str(target["SUBJ"])] = "SUBJ"
+            output["metadata"] = {
+                "column": [{"idColumn": int(id_col), "tag": column_metadata[id_col]} for id_col in column_metadata]
+            }
+            output["target"] = target
+            
+        dp.rows_normalization()     
+    except Exception as e:
+        print(f"Error {str(e)}", traceback.format_exc())
 
 
-print("End data preparation")
+    print("End data preparation")
 
-# Writing
-with open("/tmp/output.json", "wb") as f:
-    f.write(orjson.dumps(output, option=orjson.OPT_INDENT_2))
+    # Writing
+    with open("/tmp/output.json", "wb") as f:
+        f.write(orjson.dumps(output, option=orjson.OPT_INDENT_2))
 
-print("The file has been saved correctly")
+    print("The file has been saved correctly")
+
+
+asyncio.run(main())

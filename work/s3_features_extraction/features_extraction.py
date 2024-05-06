@@ -3,29 +3,35 @@ import os
 from lamAPI import LamAPI
 import sys
 import orjson
+import asyncio
 
 
 class FeaturesExtraction:
     def __init__(self, data, lamAPI):
         self._data = data
         self._lamAPI = lamAPI
+        self._cache_obj = {}
+        self._cache_lit = {}
     
-    
-    def compute_features(self):
+    async def compute_features(self):
+        tasks = []
         rows = self._data["rows"]
         target = self._data["target"]
         for index, row in enumerate(rows):
-            cells = row["data"]
-            for id_col_ne_subj in target["NE"]:
-                for id_col_ne_obj in target["NE"]:
-                    if id_col_ne_subj == id_col_ne_obj:
-                        continue
-                    self._compute_similarity_between_ne_cells(index, id_col_ne_subj, id_col_ne_obj)
-                for id_col_lit_obj in target["LIT"]:
-                    lit_cell_obj = cells[id_col_lit_obj]
-                    self._match_lit_cells(index, id_col_ne_subj, id_col_ne_obj, lit_cell_obj, target["LIT_DATATYPE"][str(id_col_lit_obj)])
+            tasks.append(asyncio.create_task(self._compute_rows(row, target, index)))
+        await asyncio.gather(*tasks)
         self._extract_features()
         
+    async def _compute_rows(self, row, target, index):
+        cells = row["data"]
+        for id_col_ne_subj in target["NE"]:
+            for id_col_ne_obj in target["NE"]:
+                if id_col_ne_subj == id_col_ne_obj:
+                    continue
+                await self._compute_similarity_between_ne_cells(index, id_col_ne_subj, id_col_ne_obj)
+            for id_col_lit_obj in target["LIT"]:
+                lit_cell_obj = cells[id_col_lit_obj]
+                await self._match_lit_cells(index, id_col_ne_subj, id_col_ne_obj, lit_cell_obj, target["LIT_DATATYPE"][str(id_col_lit_obj)])
         
     def _extract_features(self):
         features = [[] for id_col in range(len(self._data["metadata"]["column"]))]
@@ -35,14 +41,14 @@ class FeaturesExtraction:
                     features[id_col].append(list(candidate["features"].values()))
         self._data["features"] = features
     
-    def _compute_similarity_between_ne_cells(self, id_row, id_col_subj_cell, id_col_obj_cell):
+    async def _compute_similarity_between_ne_cells(self, id_row, id_col_subj_cell, id_col_obj_cell):
         subj_candidates = self._data["candidates"][id_row][id_col_subj_cell]
         obj_candidates = self._data["candidates"][id_row][id_col_obj_cell]
-        subj_id_candidates = [candidate["id"] for candidate in subj_candidates if candidate["id"] not in cache_obj]
+        subj_id_candidates = [candidate["id"] for candidate in subj_candidates if candidate["id"] not in self._cache_obj]
         obj_id_candidates = [candidate["id"] for candidate in obj_candidates]
         
         if len(subj_id_candidates) > 0:
-            subjects_objects = self._lamAPI.objects(subj_id_candidates)
+            subjects_objects = await self._lamAPI.objects(subj_id_candidates)
 
         object_rel_score_buffer = {}
 
@@ -50,11 +56,12 @@ class FeaturesExtraction:
             id_subject = subj_candidate["id"]
             #subj_candidate_objects = subjects_objects.get(id_subject, {}).get("objects", {})
             #cache_obj[id_subject] = subj_candidate_objects
-            if id_subject not in cache_obj:
+            if id_subject not in self._cache_obj:
                 subj_candidate_objects = subjects_objects.get(id_subject, {}).get("objects", {})
+                self._cache_obj[id_subject] = subj_candidate_objects
             else:    
-                subj_candidate_objects = cache_obj.get(id_subject, {})
-                cache_obj[id_subject] = subj_candidate_objects
+                subj_candidate_objects = self._cache_obj.get(id_subject, {})
+                
             objects_set = set(subj_candidate_objects.keys())
             #subj_candidate["matches"][str(id_col_obj_cell)] = []
             #subj_candidate["pred"][str(id_col_obj_cell)] = {}
@@ -92,7 +99,7 @@ class FeaturesExtraction:
             obj_candidate["features"]["p_obj_ne"] += object_rel_score_buffer[id_object]    
         
       
-    def _match_lit_cells(self, id_row, id_col_subj_cell, id_col_obj_col, obj_cell, obj_cell_datatype):
+    async def _match_lit_cells(self, id_row, id_col_subj_cell, id_col_obj_col, obj_cell, obj_cell_datatype):
     
         def get_score_based_on_datatype(valueInCell, valueFromKG, datatype):
             score = 0
@@ -107,7 +114,7 @@ class FeaturesExtraction:
         subj_candidates = self._data["candidates"][id_row][id_col_subj_cell]
         subj_id_candidates = [candidate["id"] for candidate in subj_candidates if candidate["id"] not in cache_lit]
         if len(subj_id_candidates) > 0:
-            cand_lamapi_literals = self._lamAPI.literals(subj_id_candidates)
+            cand_lamapi_literals = await self._lamAPI.literals(subj_id_candidates)
             if len(cand_lamapi_literals) == 0:
                 return
         
@@ -116,12 +123,12 @@ class FeaturesExtraction:
         for subj_candidate in subj_candidates:
             id_subject = subj_candidate["id"]
             #literals = cand_lamapi_literals[id_subject]
-            if id_subject not in cache_lit:
+            if id_subject not in self._cache_lit:
                 literals = cand_lamapi_literals.get(id_subject, {})
+                self._cache_lit[id_subject] = literals
             else:   
-                literals = cache_lit.get(id_subject, {})
-                cache_lit[id_subject] = literals
-
+                literals = self._cache_lit.get(id_subject, {})
+                
             if "literals" in literals:
                 literals = literals['literals']    
             #cache_lit[id_subject] = literals    
@@ -151,38 +158,31 @@ class FeaturesExtraction:
             subj_candidate["features"]["p_subj_lit"] += max_score
             subj_candidate["features"]["p_subj_lit"] = round(subj_candidate["features"]["p_subj_lit"], 3)
 
-print("Start features extraction")
-
-LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
-LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
-lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
-filename_path = sys.argv[1]
-
-# Reading
-with open(filename_path, "rb") as f:
-    input_data = orjson.loads(f.read())
-
-with(open("./cache_obj.json", "rb")) as f:
-    cache_obj = orjson.loads(f.read())
-
-with(open("./cache_lit.json", "rb")) as f:
-    cache_lit = orjson.loads(f.read())
-
-FeaturesExtraction(input_data, lamAPI).compute_features()
-
-print("Finish features extraction")
-
-# Writing
-with open("/tmp/output.json", "wb") as f:
-    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
-
-# Writing
-with open("/tmp/cache_obj.json", "wb") as f:
-    f.write(orjson.dumps(cache_obj, option=orjson.OPT_INDENT_2))
-
-# Writing
-with open("/tmp/cache_lit.json", "wb") as f:
-    f.write(orjson.dumps(cache_lit, option=orjson.OPT_INDENT_2))
 
 
-print("Finish writing")
+async def main():
+    print("Start features extraction")
+
+    LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
+    LAMAPI_HOST = f"{LAMAPI_HOST}:{LAMAPI_PORT}"
+    LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
+    lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_TOKEN)
+    filename_path = sys.argv[1]
+
+    # Reading
+    with open(filename_path, "rb") as f:
+        input_data = orjson.loads(f.read())
+
+    await FeaturesExtraction(input_data, lamAPI).compute_features()
+
+    print("Finish features extraction")
+
+    # Writing
+    with open("/tmp/output.json", "wb") as f:
+        f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+
+
+    print("Finish writing")
+
+
+asyncio.run(main())

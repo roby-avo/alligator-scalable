@@ -4,7 +4,7 @@ import sys
 import orjson
 import metrics as metrics
 import utils as utils
-
+import asyncio
 
 class Lookup:
     def __init__(self, data:object, lamAPI):
@@ -14,13 +14,19 @@ class Lookup:
         self._kg_ref = data["kg_reference"]
         self._limit = data["limit"]
         self._lamAPI = lamAPI
+        self._rows_data = data["rows"]
         self._rows = []
-        for row in data["rows"]:
-            row = self._build_row(row["data"])
+        self._cache = {}
+
+    async def generate_candidates(self):
+        tasks = []
+        for row in self._rows_data:
+            tasks.append(asyncio.create_task(self._build_row(row["data"])))
+        results = await asyncio.gather(*tasks)
+        for row in results:
             self._rows.append(row)
 
-
-    def _build_row(self, cells):
+    async def _build_row(self, cells):
         row_candidates = []
         features = ["ntoken", "popularity", "pos_score", "es_score", "es_diff_score", 
                     "ed_score", "jaccard_score", "jaccardNgram_score", "cosine_similarity",
@@ -31,15 +37,15 @@ class Lookup:
             if i not in self._target.get("NO_ANN", []):
                 cells_to_consider.append(cell)
         row_content_norm = utils.clean_str(" ".join(cells_to_consider))  
+        cache = {}
         for i, cell in enumerate(cells):
             new_candidites = []
             if i in self._target["NE"]:
-                #candidates = self._get_candidates(cell)
-                if cell in cache:
+                if cell in self._cache:
                     candidates = cache.get(cell, [])
                 else:
-                    candidates = self._get_candidates(cell)
-                    cache[cell] = candidates    
+                    candidates = await self._get_candidates(cell)
+                    self._cache[cell] = candidates    
                     
                 for candidate in candidates:
                     item = {
@@ -62,13 +68,13 @@ class Lookup:
         return row_candidates
 
 
-    def _get_candidates(self, cell):
+    async def _get_candidates(self, cell):
         #print("Try lookup for cell:", cell)
         candidates = []
         types = None
         result = None
         try:
-            result = self._lamAPI.lookup(cell, fuzzy=False, types=types, kg=self._kg_ref, limit=self._limit)
+            result = await self._lamAPI.lookup(cell, fuzzy=False, types=types, limit=self._limit)
             if cell not in result:
                 raise Exception("Error from lamAPI")
             candidates = result[cell]    
@@ -79,32 +85,33 @@ class Lookup:
         return candidates
 
 
-print("Start lookup")
 
-SAMPLE_SIZE = 25
-LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
-LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
-lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_PORT, LAMAPI_TOKEN)
-filename_path = sys.argv[1]
 
-# Reading
-with open(filename_path, "rb") as f:
-    input_data = orjson.loads(f.read())
+async def main():
+    print("Start lookup")
 
-with(open("./cache.json", "rb")) as f:
-    cache = orjson.loads(f.read())
+    LAMAPI_HOST, LAMAPI_PORT = os.environ["LAMAPI_ENDPOINT"].split(":")
+    LAMAPI_HOST = f"{LAMAPI_HOST}:{LAMAPI_PORT}"
+    LAMAPI_TOKEN = os.environ["LAMAPI_TOKEN"]
+    lamAPI = LamAPI(LAMAPI_HOST, LAMAPI_TOKEN)
+    filename_path = sys.argv[1]
 
-p1 = Lookup(input_data, lamAPI)
-input_data["candidates"] = p1._rows
+    # Reading
+    with open(filename_path, "rb") as f:
+        input_data = orjson.loads(f.read())
 
-print("End lookup")
+    p1 = Lookup(input_data, lamAPI)
+    await p1.generate_candidates()
+    input_data["candidates"] = p1._rows
 
-# Writing
-with open("/tmp/output.json", "wb") as f:
-    f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
+    print("End lookup")
 
-# Writing
-with open("/tmp/cache.json", "wb") as f:
-    f.write(orjson.dumps(cache, option=orjson.OPT_INDENT_2))
+    # Writing
+    with open("/tmp/output.json", "wb") as f:
+        f.write(orjson.dumps(input_data, option=orjson.OPT_INDENT_2))
 
-print("End writing")
+
+    print("End writing")
+
+
+asyncio.run(main())
