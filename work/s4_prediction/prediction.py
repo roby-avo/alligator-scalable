@@ -18,7 +18,7 @@ class Prediction:
         for column_features in self._data["features"]:
             pred = [] 
             if len(column_features) > 0:
-                pred = self._model.predict(column_features, batch_size=10000)
+                pred = self._model.predict(tf.convert_to_tensor(column_features), batch_size=10000)
             prediction.append(pred)
             indexes.append(0)
         

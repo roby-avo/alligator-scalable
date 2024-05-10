@@ -2,7 +2,7 @@ version: "3"
 
 services:
    jupyter:
-    image: roby944/jupyter
+    image: roby944/jupyter-extended
     container_name: alligator_scalabe_jupyter
     environment:
       JUPYTER_ENABLE_LAB: "yes"
