@@ -50,7 +50,7 @@ spec:
     
   - name: pre-processing
     container:
-      image: roby944/data_preparation:latest
+      image: roby944/pre_processing:asyncio
       command: [sh, -c]
       args: ["python data_preparation.py services.json SN_demo0711.csv wikidata"]
     outputs:
@@ -64,7 +64,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: roby944/lookup:latest
+      image: roby944/lookup:asyncio
       command: [sh, -c]
       args: ["python lookup.py /tmp/file"]
     outputs:
@@ -78,7 +78,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: roby944/features_extraction:latest
+      image: roby944/features_extraction:asyncio
       command: [sh, -c]
       args: ["python features_extraction.py /tmp/file"]
     outputs:
@@ -92,7 +92,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: roby944/prediction:latest
+      image: roby944/prediction:asyncio
       command: [sh, -c]
       args: ["python prediction.py /tmp/file rho"]
     outputs:
@@ -106,7 +106,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: roby944/features_extraction_revision:latest
+      image: roby944/features_extraction_revision:asyncio
       command: [sh, -c]
       args: ["python features_extraction_revision.py /tmp/file"]
     outputs:
@@ -120,7 +120,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: roby944/prediction:latest
+      image: roby944/prediction:asyncio
       command: [sh, -c]
       args: ["python prediction.py /tmp/file rho2"]
     outputs:
@@ -134,7 +134,7 @@ spec:
       - name: file
         path: /tmp/file
     container:
-      image: roby944/decision:latest
+      image: roby944/decision:asyncio
       command: [sh, -c]
       args: ["python decision.py /tmp/file"]
     outputs:

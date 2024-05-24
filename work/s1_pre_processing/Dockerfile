@@ -2,6 +2,6 @@ FROM python:3.9-slim
 WORKDIR /code
 COPY . .
 ENV LAMAPI_ENDPOINT=https://lamapi.hel.sintef.cloud/
-ENV LAMAPI_TOKEN=SINTEF2023!
+ENV LAMAPI_TOKEN=lamapi_demo_2023
 RUN pip install -r requirements.txt
-CMD ["python", "data_preparation.py", "film.csv", "wikidata"]
+CMD ["python", "data_preparation.py", "services.json", "SN_demo0711.csv", "wikidata"]
