@@ -21,18 +21,13 @@ class LamAPI():
         self.semaphore = asyncio.Semaphore(max_concurrent_requests)
 
     async def __to_format(self, response):
-        content_type = response.headers.get('Content-Type', '')
-        if 'application/json' in content_type:
-            if self.format == "json":
-                result_json = await response.json()
-                for kg in ["wikidata", "dbpedia", "crunchbase"]:
-                    if kg in result_json:
-                        return result_json[kg]
-                return result_json  # If none of the keys are found, return the original JSON data
-            else:
-                raise Exception("Sorry, Invalid format!")
-        
-        return {}
+        try:
+            result = await response.json()
+            return result
+        except aiohttp.ContentTypeError:
+            return {"error": "Invalid JSON response"}
+        except Exception as e:
+            return {"error": str(e)}
 
     async def __submit_get(self, url, params):
         try:

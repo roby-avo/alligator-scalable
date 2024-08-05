@@ -99,7 +99,7 @@ spec:
       artifacts:
       - name: output
         path: /tmp/output.json  
-  
+    
   - name: features-extraction-revision
     inputs:
       artifacts:

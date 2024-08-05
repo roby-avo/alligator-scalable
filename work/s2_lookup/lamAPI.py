@@ -21,19 +21,14 @@ class LamAPI():
         self.semaphore = asyncio.Semaphore(max_concurrent_requests)
 
     async def __to_format(self, response):
-        content_type = response.headers.get('Content-Type', '')
-        if 'application/json' in content_type:
-            if self.format == "json":
-                result_json = await response.json()
-                for kg in ["wikidata", "dbpedia", "crunchbase"]:
-                    if kg in result_json:
-                        return result_json[kg]
-                return result_json  # If none of the keys are found, return the original JSON data
-            else:
-                raise Exception("Sorry, Invalid format!")
-        
-        return {}
-
+        try:
+            result = await response.json()
+            return result
+        except aiohttp.ContentTypeError:
+            return {"error": "Invalid JSON response"}
+        except Exception as e:
+            return {"error": str(e)}
+      
     async def __submit_get(self, url, params):
         try:
             retry_options = ExponentialRetry(attempts=3, start_timeout=3, max_timeout=10)
@@ -153,27 +148,29 @@ class LamAPI():
         }
         return await self.__submit_post(self._url.entities_literals_url(), params, json_data)
 
-    async def lookup(self, string, ngrams=False, fuzzy=False, types=None, limit=100, ids=None):
+    async def lookup(self, string, fuzzy=False, types=None, limit=1000, ids=None, kind=None, NERtype=None, language=None, query=None):
         # Convert boolean values to strings
-        ngrams_str = 'true' if ngrams else 'false'
         fuzzy_str = 'true' if fuzzy else 'false'
-        types_str = ' '.join(types) if types is not None else None
-        #ids_str = ' '.join(ids) if ids else ''  # Provide default value if ids is None
-        
+        types_str = ' '.join(types) if types is not None else ''
+        ids_str = ' '.join(ids) if ids is not None else ''
+
         params = {
             'token': self.client_key,
             'name': string,
-            'ngrams': ngrams_str,
             'fuzzy': fuzzy_str,
             'kg': self.kg,
-            'limit': limit
+            'limit': limit,
+            'types': types_str,
+            'ids': ids_str,
+            'kind': kind,
+            'NERtype': NERtype,
+            'language': language,
+            'query': query
         }
-        if types_str is not None:
-            params['types'] = types_str
-            
+
+        # Remove any empty parameters
+        params = {k: v for k, v in params.items() if v}
+
         result = await self.__submit_get(self._url.lookup_url(), params)
-
-        if len(result) > 1:
-            result = {"wikidata": result}
-
+        result = result if result is not None else []
         return result
